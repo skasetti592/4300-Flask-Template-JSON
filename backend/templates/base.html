@@ -16,90 +16,48 @@
                 <h1 id="google-0-2">D</h1>
                 <h1 id="google-0-1">I</h1>
                 <h1 id="google-3">E</h1>
-                <h1 id="google-4">$</h1>
-
+                <h1 id="google-4">S</h1>
             </div>
-            <h2>Preferred Location for the morning:</h2>
-            <select id="location-morning">
-                <option value="0">Select Location</option>
-                <option value="1">California</option>
-                <option value="2">New York</option>
-                <option value="3">New Jersey</option>
-                <option value="4">Texas</option>
-                <option value="5">Washington</option>
-                <!-- Add more options as needed -->
-            </select>
 
-            <div class="input-box" onclick="sendFocus('morning')">
+            <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for Type of Establishment eg. Bar" id="filter-text-val-morning"
-                    onkeyup="filterText('morning')">
+                <input placeholder="Search for a type of establishment e.g. Bar" id="filter-text-val"
+                    onkeyup="filterText()">
             </div>
+        </div>
+        <div id="answer-box">
 
-            <h2>Preferred Location for the evening:</h2>
-            <select id="location-evening">
-                <option value="0">Select Location</option>
-                <option value="1">California</option>
-                <option value="2">New York</option>
-                <option value="3">New Jersey</option>
-                <option value="4">Texas</option>
-                <option value="5">Washington</option>
-                <!-- Add more options as needed -->
-            </select>
+        </div>
+    </div>
 
-            <div class="input-box" onclick="sendFocus('evening')">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for Type of Establishment eg. Bar" id="filter-text-val-evening"
-                    onkeyup="filterText('evening')">
-            </div>
+    <script>
 
-            <script>
-                // Example JavaScript code to handle selection change
-                document.getElementById('location-morning').addEventListener('change', function () {
-                    var selectedValue = this.value;
-                    var selectedOptionText = this.options[this.selectedIndex].text;
-                    console.log('Selected Location:', selectedOptionText, '(Value:', selectedValue + ')');
-                    // You can perform any desired action based on the selected value here
-                });
-
-                document.getElementById('location-evening').addEventListener('change', function () {
-                    var selectedValue = this.value;
-                    var selectedOptionText = this.options[this.selectedIndex].text;
-                    console.log('Selected Location:', selectedOptionText, '(Value:', selectedValue + ')');
-                    // You can perform any desired action based on the selected value here
-                });
-
-                function answerBoxTemplate(title, titleDesc, rating) {
-                    return `<div class=''>
+        function answerBoxTemplate(title, titleDesc, rating) {
+            return `<div class=''>
                 <h3 class='episode-title'>${title}</h3>
                 <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+                <p class='episode-desc'>${rating}</p>
+
             </div>`
-                }
+        }
 
-                function sendFocus(timeOfDay) {
-                    var inputID = "filter-text-val-" + timeOfDay;
-                    document.getElementById(inputID).focus();
-                }
+        function sendFocus() {
+            document.getElementById('filter-text-val').focus()
+        }
 
-                function filterText(timeOfDay) {
-                    var inputId = "filter-text-val-" + timeOfDay;
-                    var inputValue = document.getElementById(inputId).value.trim();
-                    console.log('Search Query for ' + timeOfDay + ':', inputValue);
-                    // You can perform any desired action based on the search query here
-                    fetch("/episodes?" + new URLSearchParams({ title: inputValue }).toString())
-                        .then((response) => response.json())
-                        .then((data) => {
-                            document.getElementById("answer-box").innerHTML = "";
-                            data.forEach(row => {
-                                let tempDiv = document.createElement("div");
-                                tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
-                                document.getElementById("answer-box").appendChild(tempDiv);
-                            });
-                        });
-                }
+        function filterText() {
+            document.getElementById("answer-box").innerHTML = ""
+            console.log(document.getElementById("filter-text-val").value)
+            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+                .then((response) => response.json())
+                .then((data) => data.forEach(row => {
 
-            </script>
+                    let tempDiv = document.createElement("div")
+                    tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range)
+                    document.getElementById("answer-box").appendChild(tempDiv)
+                }));
+
+        }
+
+    </script>
 </body>
-
-</html>
