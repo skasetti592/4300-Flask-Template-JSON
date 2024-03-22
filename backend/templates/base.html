@@ -3,53 +3,103 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
+
 <body>
     <div class="full-body-container">
         <div class="top-text">
             <div class="google-colors">
-                <h1 id="google-4">4</h1>
-                <h1 id="google-3">3</h1>
-                <h1 id="google-0-1">0</h1>
-                <h1 id="google-0-2">0</h1>
+                <h1 id="google-4">F</h1>
+                <h1 id="google-3">O</h1>
+                <h1 id="google-0-1">O</h1>
+                <h1 id="google-0-2">D</h1>
+                <h1 id="google-0-1">I</h1>
+                <h1 id="google-3">E</h1>
+                <h1 id="google-4">$</h1>
+
             </div>
-            <div class="input-box" onclick="sendFocus()">
+            <h2>Preferred Location for the morning:</h2>
+            <select id="location-morning">
+                <option value="0">Select Location</option>
+                <option value="1">California</option>
+                <option value="2">New York</option>
+                <option value="3">New Jersey</option>
+                <option value="4">Texas</option>
+                <option value="5">Washington</option>
+                <!-- Add more options as needed -->
+            </select>
+
+            <div class="input-box" onclick="sendFocus('morning')">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Search for Type of Establishment eg. Bar" id="filter-text-val-morning"
+                    onkeyup="filterText('morning')">
             </div>
-        </div>
-        <div id="answer-box">
 
-        </div>
-    </div>
+            <h2>Preferred Location for the evening:</h2>
+            <select id="location-evening">
+                <option value="0">Select Location</option>
+                <option value="1">California</option>
+                <option value="2">New York</option>
+                <option value="3">New Jersey</option>
+                <option value="4">Texas</option>
+                <option value="5">Washington</option>
+                <!-- Add more options as needed -->
+            </select>
 
-    <script>
+            <div class="input-box" onclick="sendFocus('evening')">
+                <img src="{{ url_for('static', filename='images/mag.png') }}" />
+                <input placeholder="Search for Type of Establishment eg. Bar" id="filter-text-val-evening"
+                    onkeyup="filterText('evening')">
+            </div>
 
-        function answerBoxTemplate(title,titleDesc,rating){
-            return `<div class=''>
+            <script>
+                // Example JavaScript code to handle selection change
+                document.getElementById('location-morning').addEventListener('change', function () {
+                    var selectedValue = this.value;
+                    var selectedOptionText = this.options[this.selectedIndex].text;
+                    console.log('Selected Location:', selectedOptionText, '(Value:', selectedValue + ')');
+                    // You can perform any desired action based on the selected value here
+                });
+
+                document.getElementById('location-evening').addEventListener('change', function () {
+                    var selectedValue = this.value;
+                    var selectedOptionText = this.options[this.selectedIndex].text;
+                    console.log('Selected Location:', selectedOptionText, '(Value:', selectedValue + ')');
+                    // You can perform any desired action based on the selected value here
+                });
+
+                function answerBoxTemplate(title, titleDesc, rating) {
+                    return `<div class=''>
                 <h3 class='episode-title'>${title}</h3>
                 <p class='episode-desc'>${titleDesc}</p>
                 <p class='episode-rating'>IMDB Rating: ${rating}</p>
             </div>`
-        }
+                }
 
-        function sendFocus(){
-            document.getElementById('filter-text-val').focus()
-        }
+                function sendFocus(timeOfDay) {
+                    var inputID = "filter-text-val-" + timeOfDay;
+                    document.getElementById(inputID).focus();
+                }
 
-        function filterText(){
-            document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
-            .then((response) => response.json())
-            .then((data) => data.forEach(row => {
-                
-                let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
-                document.getElementById("answer-box").appendChild(tempDiv)
-            }));
+                function filterText(timeOfDay) {
+                    var inputId = "filter-text-val-" + timeOfDay;
+                    var inputValue = document.getElementById(inputId).value.trim();
+                    console.log('Search Query for ' + timeOfDay + ':', inputValue);
+                    // You can perform any desired action based on the search query here
+                    fetch("/episodes?" + new URLSearchParams({ title: inputValue }).toString())
+                        .then((response) => response.json())
+                        .then((data) => {
+                            document.getElementById("answer-box").innerHTML = "";
+                            data.forEach(row => {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.title, row.descr, row.imdb_rating);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            });
+                        });
+                }
 
-        }
-            
-    </script>
+            </script>
 </body>
+
+</html>
