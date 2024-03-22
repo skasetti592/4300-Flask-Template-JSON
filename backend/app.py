@@ -30,12 +30,10 @@ def json_search(query):
     #merged_df = pd.merge(episodes_df, reviews_df, left_on='id', right_on='id', how='inner')
     
     #m_e = restaurants_df['Morning']
-    matches = restaurants_df[restaurants_df['Type'].str.lower().str.contains(query.lower())]
+    matches = restaurants_df[restaurants_df['type'].str.lower().str.contains(query.lower())]
     tags = []
-    #for i in matches: 
-        #if matches[i] == 1: 
-            #tags.append(i)
-    matches_filtered = matches[['Name', 'Type', 'Location', 'Price_Range']]
+
+    matches_filtered = matches[['name','type', 'price_range']]
     matches_filtered_json = matches_filtered.to_json(orient='records')
     return matches_filtered_json
 
