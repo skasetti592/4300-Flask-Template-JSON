@@ -1,63 +1,220 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
+<title>{% block title %}{% endblock %}GrubCity</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
+<style>
+    select {
 
-<body>
+        padding: 8px 15px;
+        border: none;
+        border-radius: 4px;
+        background-color: #FF8C00;
+    }
+
+    #submitButton {
+
+        background-color: #FF8C00;
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 4px 2px;
+        cursor: pointer;
+
+
+    }
+
+    #preferences {
+        font-family: Lucida Console, Courier New, monospace;
+        width: 100%
+    }
+
+    form {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .container {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header img {
+        margin-top: 20px;
+        width: 75px;
+        height: 75px;
+        padding-left: 100px;
+
+    }
+
+    .header h1 {
+        font-family: Lucida Console, Courier New, monospace;
+        font-size: 300%;
+        margin-top: 10px;
+    }
+
+    .inputBox {
+        padding: 6px;
+        margin-top: 8px;
+        margin-right: 16px;
+        font-size: 13px;
+    }
+
+    .inputs {
+        flex-basis: 45%;
+        padding-left: 100px;
+        padding-right: 100px;
+        
+    }
+
+    .input-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .input-container > * {
+        flex-basis: calc(50% - 10px);
+    }
+</style>
+
+<body style="background-color:#FFBF86;">
     <div class="full-body-container">
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-4">F</h1>
-                <h1 id="google-3">O</h1>
-                <h1 id="google-0-1">O</h1>
-                <h1 id="google-0-2">D</h1>
-                <h1 id="google-0-1">I</h1>
-                <h1 id="google-3">E</h1>
-                <h1 id="google-4">S</h1>
-            </div>
-
-            <div class="input-box" onclick="sendFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a type of establishment e.g. Bar" id="filter-text-val"
-                    onkeyup="filterText()">
+            <div class="container">
+                <div class="header">
+                    <img src="../static/images/plane.jpg" width=80px height=80px />
+                    <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:300%">Grub City</h1>
+                </div>
             </div>
         </div>
+
+        <form id="inputValues">
+            <div class="inputs" onclick="sendFocus()">
+                <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:200%; padding-left:160px">Morning</h1>
+                <label for="locality" style="font-family: Lucida Console, Courier New, monospace;">Location for the morning:</label>
+                <select name="locality" id="locality">
+                    <option value="" disabled selected hidden>Select your preferred location</option>
+                    <option value="California">California</option>
+                    <option value="New Jersey">New Jersey</option>
+                    <option value="New York">New York</option>
+                    <option value="Texas">Texas</option>
+                    <option value="Washington">Washington</option>
+                </select>
+                <p style="font-family: Lucida Console, Courier New, monospace;" ;>Description for the morning: <input class="inputBox" 
+                    input placeholder="Search for desired vibes (e.g. cozy)" id="preferences_morn" onkeyup="filterText()" type="text" name="text" style="width: 80%;">
+                </p>
+            </div>
+
+            <div class="inputs">
+                <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:200%; padding-left:160px">Evening</h1>
+                <label for="locality" style="font-family: Lucida Console, Courier New, monospace;">Location for the evening:</label>
+                <select name="local" id="local">
+                    <option value="" disabled selected hidden>Select your preferred location</option>
+                    <option value="California">California</option>
+                    <option value="New Jersey">New Jersey</option>
+                    <option value="New York">New York</option>
+                    <option value="Texas">Texas</option>
+                    <option value="Washington">Washington</option>
+                </select>
+                <p style="font-family: Lucida Console, Courier New, monospace;" ;>Description for the evening: <input class="inputBox" 
+                    input placeholder="Search for desired vibes (e.g. cozy)" id="preferences_even" type="text" name="text" style="width: 80%;">
+                </p>
+            </div>
+        </form>
+
+        <label for="price-range">Select Price Range:</label><br>
+        <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
+        <div class="price-range-label">
+            <output id="price-output">NA</output>
+        </div>
+
+
+        <div class="submitButton">
+            <p class="pt-3"><button id="submitButton" form=inputValues type="submit";>Submit</button></p>
+        </div>
+
         <div id="answer-box">
-
         </div>
+
+        <script>
+            
+            const priceRangeInput = document.getElementById('price-range');
+            const priceOutput = document.getElementById('price-output');
+
+            priceRangeInput.addEventListener('input', function () {
+                let priceSymbol = '';
+                switch (parseInt(this.value)) {
+                    case 1:
+                        priceSymbol = 'NA';
+                        break;
+                    case 2:
+                        priceSymbol = '$';
+                        break;
+                    case 3:
+                        priceSymbol = '$$';
+                        break;
+                    case 4:
+                        priceSymbol = '$$$';
+                        break;
+                    default:
+                        priceSymbol = 'NA';
+                        break;
+                }
+                priceOutput.textContent = priceSymbol;
+                filterText();
+            });
+
+            function answerBoxTemplate(title, titleDesc, rating) {
+                return `<div class=''>
+                    <h3 class='episode-title'>${title}</h3>
+                    <p class='episode-desc'>${titleDesc}</p>
+                    <p class='episode-desc'>${rating}</p>
+                </div>`;
+            }
+            
+
+            function sendFocus() {
+                document.getElementById("preferences_morn").focus();
+            }
+
+            function filterText() {
+                document.getElementById("answer-box").innerHTML = "";
+
+                const filterText = document.getElementById("preferences_morn").value;
+                const priceRange = document.getElementById('price-range').value;
+
+                fetch("/episodes?" + new URLSearchParams({ title: filterText, price_range: priceRange }).toString())
+                    .then((response) => response.json())
+                    .then((data) => {
+                        data.forEach(row => {
+                            // Check if the row's price range matches the selected price range
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            }
+                        });
+                    });
+            }
+
+        </script>
+
+
     </div>
-
-    <script>
-
-        function answerBoxTemplate(title, titleDesc, rating) {
-            return `<div class=''>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-desc'>${rating}</p>
-
-            </div>`
-        }
-
-        function sendFocus() {
-            document.getElementById('filter-text-val').focus()
-        }
-
-        function filterText() {
-            document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
-                .then((response) => response.json())
-                .then((data) => data.forEach(row => {
-
-                    let tempDiv = document.createElement("div")
-                    tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range)
-                    document.getElementById("answer-box").appendChild(tempDiv)
-                }));
-
-        }
-
-    </script>
+    </div>
 </body>

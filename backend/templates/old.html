@@ -1,0 +1,118 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
+    rel="stylesheet">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Price Range Selector</title>
+    <style>
+        .price-range-label {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="full-body-container">
+        <div class="top-text">
+            <div class="google-colors">
+                <h1 id="google-4">F</h1>
+                <h1 id="google-3">O</h1>
+                <h1 id="google-0-1">O</h1>
+                <h1 id="google-0-2">D</h1>
+                <h1 id="google-0-1">I</h1>
+                <h1 id="google-3">E</h1>
+                <h1 id="google-4">$</h1>
+            </div>
+
+            <div class="input-box" onclick="sendPFocus()">
+                <img src="{{ url_for('static', filename='images/mag.png') }}" />
+                <input placeholder="Search for a type of establishment e.g. Bar" id="filter-text-val"
+                    onkeyup="filterText()">
+            </div>
+        </div>
+        <div id="answer-box">
+        </div>
+
+        <label for="price-range">Select Price Range:</label><br>
+        <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
+        <div class="price-range-label">
+            <output id="price-output">NA</output>
+        </div>
+
+
+        <script>
+            const priceRangeInput = document.getElementById('price-range');
+            const priceOutput = document.getElementById('price-output');
+
+            priceRangeInput.addEventListener('input', function () {
+                let priceSymbol = '';
+                switch (parseInt(this.value)) {
+                    case 1:
+                        priceSymbol = 'NA';
+                        break;
+                    case 2:
+                        priceSymbol = '$';
+                        break;
+                    case 3:
+                        priceSymbol = '$$';
+                        break;
+                    case 4:
+                        priceSymbol = '$$$';
+                        break;
+                    default:
+                        priceSymbol = 'NA';
+                        break;
+                }
+                priceOutput.textContent = priceSymbol;
+                filterText();
+            });
+
+
+            function answerBoxTemplate(title, titleDesc, rating) {
+                return `<div class=''>
+                    <h3 class='episode-title'>${title}</h3>
+                    <p class='episode-desc'>${titleDesc}</p>
+                    <p class='episode-desc'>${rating}</p>
+                </div>`;
+            }
+
+            function sendFocus() {
+                document.getElementById('filter-text-val').focus();
+            }
+
+            function filterText() {
+                document.getElementById("answer-box").innerHTML = "";
+
+                const filterText = document.getElementById("filter-text-val").value;
+                const priceRange = document.getElementById('price-range').value;
+
+                fetch("/episodes?" + new URLSearchParams({ title: filterText, price_range: priceRange }).toString())
+                    .then((response) => response.json())
+                    .then((data) => {
+                        data.forEach(row => {
+                            // Check if the row's price range matches the selected price range
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box").appendChild(tempDiv);
+                            }
+                        });
+                    });
+            }
+
+        </script>
+</body>
