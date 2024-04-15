@@ -16,7 +16,7 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 json_file_path = os.path.join(current_directory, 'csvjson.json')
 
 # Assuming your JSON data is stored in a file named 'init.json'
-with open(json_file_path, 'r') as file:
+with open(json_file_path, 'r', encoding = 'utf-8') as file:
     data = json.load(file)
     restaurants_df = pd.DataFrame(data['restuarants'])
    #reviews_df = pd.DataFrame(data['reviews'])

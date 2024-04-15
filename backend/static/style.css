@@ -55,12 +55,10 @@
     justify-content: center;
 }
 
-
 .header img {
     margin-top: 20px;
     width: 75px;
     height: 75px;
-
 }
 
 .header h1 {
@@ -68,7 +66,6 @@
     font-size: 320%;
     margin-top: 10px;
 }
-
 
 .price-button {
     font-family: 'Satoshi Bold';
@@ -85,7 +82,6 @@
 h2 {
     font-family: 'Poppins Bold';
     text-align: center;
-    margin-bottom: -10px;
 }
 
 h3 {
@@ -146,28 +142,6 @@ p {
     width: 100%
 }
 
-#google-4 {
-    color: #F4B400;
-}
-
-#google-3 {
-    color: #4285F4;
-}
-
-#google-0-1 {
-    color: #0F9D58;
-}
-
-#google-0-2 {
-    color: #DB4437;
-}
-
-.google-colors {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
 form>* {
     width: 50%
 }
@@ -188,6 +162,7 @@ form>* {
     margin-top: auto;
     margin-right: auto;
     font-size: 15px;
+    text-align: center;
 }
 
 .inputs {
@@ -195,25 +170,39 @@ form>* {
     padding-left: 100px;
     padding-right: 100px;
     margin-bottom: auto;
-}
-
-.input-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    height: 200px;
-}
-
-.input-container>* {
-    flex-basis: calc(50% - 10px);
 }
 
 .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 50%;
+    width: 70%;
     position: relative;
+    flex-shrink: 0;
+}
+
+.main-container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+.inputBox {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    /* This will center the input box if its width is less than 100% */
+}
+
+.description {
+    margin-top: -25px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
 }
 
 #answer-box-1,
@@ -228,7 +217,6 @@ form>* {
     left: 50%;
     transform: translateX(-50%)
 }
-
 
 .input-container,
 #answer-box-1,
