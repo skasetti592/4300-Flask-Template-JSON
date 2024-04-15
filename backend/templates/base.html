@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
 
-<body>
+<body style="background-color:#FFBF86;">
     <div class="full-body-container">
         <div class="top-text">
             <div class="container">
@@ -41,35 +41,35 @@
 
 
         <form id="inputValues">
-            <div class="main-container">
-                <div class="inputs">
-                    <h2>Morning</h2>
-                    <p> Description for the morning:
-                        <input class="inputBox" onclick="sendFocus()" input
-                            placeholder="Search for desired vibes (e.g. cozy)" id="preferences_morn"
-                            onkeyup="filterText()" type="text" name="text" style="width: 80%;">
-                    </p>
+            <div class="main-container-wrapper">
+                <div class="main-container">
+                    <div class="inputs">
+                        <h2>Morning</h2>
+                        <p> Description for the morning:
+                            <input class="inputBox" onclick="sendFocus()" input
+                                placeholder="Search for desired vibes (e.g. cozy)" id="preferences_morn"
+                                onkeyup="filterText()" type="text" name="text" style="width: 80%;">
+                        </p>
+                    </div>
+
+                    <div class="answer-box" id="answer-box-1" ;>
+                    </div>
                 </div>
 
-                <div id="answer-box-1" ;>
+                <div class="main-container">
+                    <div class="inputs">
+                        <h2>Evening</h2>
+                        <p> Description for the evening:
+                            <input class="inputBox" onclick="sendFocus2()" input
+                                placeholder="Search for desired vibes (e.g. cozy)" id="preferences_even"
+                                onkeyup="filterText2()" type="text" name="text" style="width: 80%;">
+                        </p>
+                    </div>
+
+                    <div class="answer-box" id="answer-box-2">
+                    </div>
                 </div>
             </div>
-
-            <div class="main-container">
-                <div class="inputs">
-                    <h2>Evening</h2>
-                    <p> Description for the evening:
-                        <input class="inputBox" onclick="sendFocus2()" input
-                            placeholder="Search for desired vibes (e.g. cozy)" id="preferences_even"
-                            onkeyup="filterText2()" type="text" name="text" style="width: 80%;">
-                    </p>
-                </div>
-
-                <div id="answer-box-2">
-                </div>
-            </div>
-
-
         </form>
     </div>
 
@@ -241,57 +241,57 @@
                 .then((data) => {
                     data.forEach(row => {
                         if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
-                            if (row.price_range === '$' && priceRange === '2') {
+                            if (row.price_range === '$' && priceRange2 === '2') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$' && priceRange === '3') {
+                            } else if (row.price_range === '$$' && priceRange2 === '3') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                            } else if (row.price_range === '$$$' && priceRange2 === '4') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
                             }
                         } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
-                            if (row.price_range === '$' && priceRange === '2') {
+                            if (row.price_range === '$' && priceRange2 === '2') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$' && priceRange === '3') {
+                            } else if (row.price_range === '$$' && priceRange2 === '3') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                            } else if (row.price_range === '$$$' && priceRange2 === '4') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
                             }
                         } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
-                            if (row.price_range === '$' && priceRange === '2') {
+                            if (row.price_range === '$' && priceRange2 === '2') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$' && priceRange === '3') {
+                            } else if (row.price_range === '$$' && priceRange2 === '3') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                            } else if (row.price_range === '$$$' && priceRange2 === '4') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
                             }
                         } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
-                            if (row.price_range === '$' && priceRange === '2') {
+                            if (row.price_range === '$' && priceRange2 === '2') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$' && priceRange === '3') {
+                            } else if (row.price_range === '$$' && priceRange2 === '3') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);
-                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                            } else if (row.price_range === '$$$' && priceRange2 === '4') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
                                 document.getElementById("answer-box-2").appendChild(tempDiv);

@@ -1,91 +1,228 @@
-.full-body-container{
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    width:100%;
-    height:100%;
+@font-face {
+    font-family: 'Satoshi';
+    src: url('/static/fonts/satoshi-regular.ttf');
+}
+
+@font-face {
+    font-family: 'Satoshi Bold';
+    src: url('/static/fonts/satoshi-bold.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/static/fonts/poppins-regular.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins Bold';
+    src: url('/static/fonts/poppins-bold.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('/static/fonts/nanumgothic-regular.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic Bold';
+    src: url('/static/fonts/nanumgothic-bold.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic Extrabold';
+    src: url('/static/fonts/nanumgothic-extrabold.ttf');
+}
+
+
+.full-body-container {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: start;
     align-items: center;
     flex-direction: column;
 }
 
-#google-c{
-    color:#4285F4;
-}
-
-#google-s{
-    color:#DB4437;
-}
-
-#google-4{
-    color:	#F4B400;
-}
-
-#google-3{
-    color:	#4285F4;
-}
-
-#google-0-1{
-    color:	#0F9D58;
-}
-
-#google-0-2{
-    color:#DB4437;
-}
-
-.google-colors{
+.header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    font-size: 48px;
-    font-family: 'Open Sans', sans-serif;
+    justify-content: center;
 }
 
-.google-colors h1{
-    margin-bottom: 0;
-    margin-right: 3px;
+.header img {
+    margin-top: 20px;
+    width: 75px;
+    height: 75px;
 }
 
-.input-box{
-    border-radius: 50px;
-    border:1px solid black;
-    display: flex;
-    align-items: center;
+.header h1 {
+    font-family: 'Poppins Bold';
+    font-size: 320%;
     margin-top: 10px;
-    padding:12px;
-    width: 600px;
 }
 
-.input-box img{
-    height: 20px;
-    width:20px;
+.price-button {
+    font-family: 'Satoshi Bold';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.top-text{
+.price-button input {
+    width: 75%;
+}
+
+h2 {
+    font-family: 'Poppins Bold';
+    text-align: center;
+}
+
+h3 {
+    font-family: 'Satoshi Bold';
+    text-align: center;
+}
+
+label {
+    font-family: 'Poppins';
+    text-align: center;
+}
+
+.centered-label {
+    text-align: center;
+}
+
+.inputs label,
+.inputs select {
+    text-align: center;
+}
+
+.price-range-label {
+    text-align: center;
+}
+
+select {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #FF8C00;
+    font-family: 'Satoshi Bold';
+    text-align-last: center;
+    text-align: center;
+    -moz-text-align-last: center;
+}
+
+.location-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+
+
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+#preferences {
+    font-family: 'Satoshi Bold';
+    width: 100%
+}
+
+form>* {
+    width: 50%
+}
+
+.container {
+    justify-content: center;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.input-box input{
+.price-text {
+    font-size: 20px;
+}
+
+.inputBox {
+    padding: 6px;
+    margin-top: auto;
+    margin-right: auto;
+    font-size: 15px;
+    text-align: center;
+}
+
+.inputs {
+    flex-basis: 45%;
+    padding-left: 100px;
+    padding-right: 100px;
+    margin-bottom: auto;
+    display: flex;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.main-container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    margin-left: 10px;
-    font-size: 16px;
-    border: none;
-    outline: 0;
+    flex-wrap: nowrap;
 }
 
-#answer-box{
-    width: 700px;
-    margin-top:50px; 
+.inputBox {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    /* This will center the input box if its width is less than 100% */
 }
 
-.episode-title{
-    font-family: 'Kanit', sans-serif;
+.description {
+    margin-top: -25px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
 }
 
-.episode-desc{
-    font-family: 'Montserrat', sans-serif;
+#answer-box-1,
+#answer-box-2 {
+    border: solid 2px white;
+    /* Adjust border color as needed */
+    width: 80%;
+    /* Adjust width as needed */
+    margin: auto;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%)
+}
+
+.input-container,
+#answer-box-1,
+#answer-box-2 {
+    flex-basis: 50%
 }
