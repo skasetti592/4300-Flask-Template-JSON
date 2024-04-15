@@ -85,7 +85,7 @@ def home():
 def episodes_search():
     text = request.args.get("title")
     price_range = request.args.get("price_range")
-    return rocchio_search(text, price_range)
+    return svd_search(text, price_range)
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)

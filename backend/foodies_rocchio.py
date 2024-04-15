@@ -93,12 +93,13 @@ def rocchio_results(df, query, price_range):
   #print("Rocchio Results:")
   final = []
   threshold = 5
+  num = len(rocchio_cossims_sorted)
   if len(qtypes) == 0 or len(rocchio_cossims_sorted) < threshold:
-    for i in range(100):
+    for i in range(300):
       #if df.loc[i, 'price_range'] == final_price:
         final.append(df.at[rocchio_cossims_sorted[i][0], 'name'])
   else:
-    for i in range(100):
+    for i in range(300):
       #if df.loc[i, 'price_range'] == final_price:
         final.append(df.at[rocchio_cossims_sorted[i][0], 'name'])
   return final 
