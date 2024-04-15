@@ -6,83 +6,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
-<style>
-    select {
-
-        padding: 8px 15px;
-        border: none;
-        border-radius: 4px;
-        background-color: #FF8C00;
-    }
-
-    #submitButton {
-
-        background-color: #FF8C00;
-        border: none;
-        color: white;
-        padding: 8px 16px;
-        text-decoration: none;
-        margin: 4px 2px;
-        cursor: pointer;
-
-
-    }
-
-    #preferences {
-        font-family: Lucida Console, Courier New, monospace;
-        width: 100%
-    }
-
-    form {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .container {
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .header img {
-        margin-top: 20px;
-        width: 75px;
-        height: 75px;
-        padding-left: 100px;
-
-    }
-
-    .header h1 {
-        font-family: Lucida Console, Courier New, monospace;
-        font-size: 300%;
-        margin-top: 10px;
-    }
-
-    .inputBox {
-        padding: 6px;
-        margin-top: 8px;
-        margin-right: 16px;
-        font-size: 13px;
-    }
-
-    .inputs {
-        flex-basis: 45%;
-        padding-left: 100px;
-        padding-right: 100px;
-        
-    }
-
-    .input-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    .input-container > * {
-        flex-basis: calc(50% - 10px);
-    }
-</style>
 
 <body style="background-color:#FFBF86;">
     <div class="full-body-container">
@@ -95,9 +18,9 @@
             </div>
         </div>
 
-        <form id="inputValues">
-            <div class="inputs" onclick="sendFocus()">
-                <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:200%; padding-left:160px">Morning</h1>
+        <form id="inputValues"> 
+            <div class="inputs">
+                <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:200%">Morning</h1>
                 <label for="locality" style="font-family: Lucida Console, Courier New, monospace;">Location for the morning:</label>
                 <select name="locality" id="locality">
                     <option value="" disabled selected hidden>Select your preferred location</option>
@@ -107,13 +30,16 @@
                     <option value="Texas">Texas</option>
                     <option value="Washington">Washington</option>
                 </select>
-                <p style="font-family: Lucida Console, Courier New, monospace;" ;>Description for the morning: <input class="inputBox" 
+                <p style="font-family: Lucida Console, Courier New, monospace;" ;>Description for the morning: <input class="inputBox" onclick="sendFocus()"
                     input placeholder="Search for desired vibes (e.g. cozy)" id="preferences_morn" onkeyup="filterText()" type="text" name="text" style="width: 80%;">
                 </p>
             </div>
 
+            <div id="answer-box-1" style= "border: solid 2px red;">
+            </div>
+
             <div class="inputs">
-                <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:200%; padding-left:160px">Evening</h1>
+                <h1 style="font-family: Lucida Console, Courier New, monospace; font-size:200%">Evening</h1>
                 <label for="locality" style="font-family: Lucida Console, Courier New, monospace;">Location for the evening:</label>
                 <select name="local" id="local">
                     <option value="" disabled selected hidden>Select your preferred location</option>
@@ -123,25 +49,31 @@
                     <option value="Texas">Texas</option>
                     <option value="Washington">Washington</option>
                 </select>
-                <p style="font-family: Lucida Console, Courier New, monospace;" ;>Description for the evening: <input class="inputBox" 
-                    input placeholder="Search for desired vibes (e.g. cozy)" id="preferences_even" type="text" name="text" style="width: 80%;">
+                <p style="font-family: Lucida Console, Courier New, monospace;" ;>Description for the evening: <input class="inputBox" onclick="sendFocus2()"
+                    input placeholder="Search for desired vibes (e.g. cozy)" id="preferences_even" onkeyup="filterText2()" type="text" name="text" style="width: 80%;">
                 </p>
             </div>
-        </form>
 
-        <label for="price-range">Select Price Range:</label><br>
-        <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
-        <div class="price-range-label">
-            <output id="price-output">NA</output>
-        </div>
+            <div id="answer-box-2" style= "border: solid 2px green;">
+            </div>
+
+            
+        </form> 
+    </div>
+
+    <label for="price-range">Select Price Range:</label><br>
+            <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
+            <div class="price-range-label">
+                <output id="price-output">NA</output>
+            </div>
 
 
-        <div class="submitButton">
-            <p class="pt-3"><button id="submitButton" form=inputValues type="submit";>Submit</button></p>
-        </div>
+        
+       
 
-        <div id="answer-box">
-        </div>
+        
+
+    
 
         <script>
             
@@ -169,9 +101,10 @@
                 }
                 priceOutput.textContent = priceSymbol;
                 filterText();
+                filterText2();
             });
 
-            function answerBoxTemplate(title, titleDesc, rating) {
+             function answerBoxTemplate(title, titleDesc, rating) { 
                 return `<div class=''>
                     <h3 class='episode-title'>${title}</h3>
                     <p class='episode-desc'>${titleDesc}</p>
@@ -185,7 +118,7 @@
             }
 
             function filterText() {
-                document.getElementById("answer-box").innerHTML = "";
+                document.getElementById("answer-box-1").innerHTML = "";
 
                 const filterText = document.getElementById("preferences_morn").value;
                 const priceRange = document.getElementById('price-range').value;
@@ -198,23 +131,68 @@
                             if (row.price_range === '$' && priceRange === '2') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
-                                document.getElementById("answer-box").appendChild(tempDiv);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
                             } else if (row.price_range === '$$' && priceRange === '3') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
-                                document.getElementById("answer-box").appendChild(tempDiv);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
                             } else if (row.price_range === '$$$' && priceRange === '4') {
                                 let tempDiv = document.createElement("div");
                                 tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
-                                document.getElementById("answer-box").appendChild(tempDiv);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            }
+                        });
+                    });
+            }
+            
+
+           
+
+            function answerBoxTemplate2(title, titleDesc, rating) {
+                return `<div class=''>
+                    <h3 class='episode-title'>${title}</h3>
+                    <p class='episode-desc'>${titleDesc}</p>
+                    <p class='episode-desc'>${rating}</p>
+                </div>`;
+            }
+            
+
+            function sendFocus2() {
+                document.getElementById("preferences_even").focus();
+            }
+
+            function filterText2() {
+                document.getElementById("answer-box-2").innerHTML = "";
+
+                const filterText2 = document.getElementById("preferences_even").value;
+                const priceRange2 = document.getElementById('price-range').value;
+
+                fetch("/episodes?" + new URLSearchParams({ title: filterText2, price_range: priceRange2 }).toString())
+                    .then((response) => response.json())
+                    .then((data) => {
+                        data.forEach(row => {
+                            // Check if the row's price range matches the selected price range
+                            if (row.price_range === '$' && priceRange2 === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate2(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange2 === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate2(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange2 === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate2(row.name, row.type, row.price_range);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
                             }
                         });
                     });
             }
 
+   
+
         </script>
 
 
-    </div>
-    </div>
+    
 </body>
