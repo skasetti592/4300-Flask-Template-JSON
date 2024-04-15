@@ -15,9 +15,9 @@ import math
 import re
 
 
-def svd_results(df):
+def svd_results(df, query):
   # OLD - creating tf-idf matrix
-  reviews = df['Comments'].tolist()
+  reviews = df['comments'].tolist()
   tfidf_vectorizer = TfidfVectorizer()
   tfidf_matrix = tfidf_vectorizer.fit_transform(reviews).toarray()
 
@@ -41,12 +41,12 @@ def svd_results(df):
       return [[reviews[i],sims[i], i] for i in asort[1:]]
 
   # NEW - parameters: the query, cuisine match, state, morning/evening, if they do not like a certain cuisine
-  query = "i love mexican people avocados from mexico" # example
-  location = 'NJ' # example
+  #query = "i love mexican people avocados from mexico" # example
+  #location = 'NJ' # example
 
   # OLD - from cossim code
   types = set()
-  for entry in df["Type"]:
+  for entry in df["type"]:
     temp = re.findall(r'[a-z]+', entry.lower())
     for val in temp:
       types.add(val)
@@ -72,9 +72,9 @@ def svd_results(df):
 
 
   for title, score, i in closest_projects(0, docs_compressed_normed):
-    if df.loc[i, 'State Abbreviation'] == location: # parameter
-      if df.loc[i, 'Evening'] == 1: # parameter - change these based on whether it is morning or evening, right now i put for evening
-        entry = df.loc[i, 'Type']
+    #if df.loc[i, 'State Abbreviation'] == location: # parameter
+      #if df.loc[i, 'Evening'] == 1: # parameter - change these based on whether it is morning or evening, right now i put for evening
+        entry = df.loc[i, 'type']
         temp = re.findall(r'[a-z]+', entry.lower())
         found = False
         for t in temp:
@@ -82,7 +82,7 @@ def svd_results(df):
             found = True
 
         if found:
-          temp = df.loc[i, 'Name']
+          temp = df.loc[i, 'name']
           results.add(temp)
 
   return results 

@@ -99,11 +99,11 @@ def cossim_full(df, query):
   threshold = 5 # this can be changed
   final = []
   if len(qtypes) == 0 or len(results) < threshold: # if there are no types in the query or if there are not at least 5 results
-    for i in range(100):
+    for i in range(10):
       final.append(df.at[cossims_sorted[i][0], 'name'])
       #print(df.at[cossims_sorted[i][0], 'name'])
   else: # otherwise print out the filtered results
-    for i in range(100):
+    for i in range(10):
       final.append(df.at[results[i][0], 'name'])
       #print(df.at[results[i][0], 'name'])
   return final

@@ -4,6 +4,9 @@ from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import pandas as pd
+import foodies_cossim as fc
+import foodies_svd as svd 
+import foodies_rocchio as rocchio
 
 # ROOT_PATH for linking with all your files. 
 # Feel free to use a config.py or settings.py with a global export variable
@@ -16,14 +19,51 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 json_file_path = os.path.join(current_directory, 'csvjson.json')
 
 # Assuming your JSON data is stored in a file named 'init.json'
-with open(json_file_path, 'r', encoding = 'utf-8') as file:
+with open(json_file_path, 'r', errors='ignore') as file:
     data = json.load(file)
-    restaurants_df = pd.DataFrame(data['restuarants'])
+    restaurants_df = pd.DataFrame(data['restaurants'])
    #reviews_df = pd.DataFrame(data['reviews'])
 
 app = Flask(__name__)
 CORS(app)
 
+
+def cossim_search(query): 
+    #cossims_sorted = fc.cossim_mat(restaurants_df, query)
+    ##types = fc.types_set(restaurants_df)
+    #qtypes = fc.tokenize_types(types, query)
+    results = fc.cossim_full(restaurants_df, query)
+    #print(results)
+    df = pd.DataFrame(results, columns=['name'])
+    #matches = pd.merge(restaurants_df,df) 
+    #df['id'] = range(1, len(df)+1) 
+    matches = pd.merge(df,restaurants_df, on='name') 
+    matches_filtered = matches[['name','type', 'price_range']]
+    out = matches_filtered.sort_index()
+    matches_filtered_json = out.to_json(orient='records')
+    return matches_filtered_json 
+    
+def svd_search(query, price_range): 
+    results = svd.svd_results(restaurants_df, query)
+    print(results)
+    df = pd.DataFrame(results, columns=['name'])
+    matches = pd.merge(df,restaurants_df, on='name') 
+    matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
+    out = matches_filtered.sort_index()
+    matches_filtered_json = out.to_json(orient='records')
+    return matches_filtered_json 
+
+def rocchio_search(query, price_range): 
+    results = rocchio.rocchio_results(restaurants_df, query, price_range)
+    print(results)
+    df = pd.DataFrame(results, columns=['name'])
+    matches = pd.merge(df,restaurants_df, on='name') 
+    matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
+    out = matches_filtered.sort_index()
+    matches_filtered_json = out.to_json(orient='records')
+    return matches_filtered_json 
+
+    
 # Sample search using json with pandas
 def json_search(query):
     matches = []
@@ -44,7 +84,8 @@ def home():
 @app.route("/episodes")
 def episodes_search():
     text = request.args.get("title")
-    return json_search(text)
+    price_range = request.args.get("price_range")
+    return rocchio_search(text, price_range)
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)
