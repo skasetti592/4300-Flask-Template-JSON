@@ -33,7 +33,7 @@ def json_search(query):
     matches = restaurants_df[restaurants_df['type'].str.lower().str.contains(query.lower())]
     tags = []
 
-    matches_filtered = matches[['name','type', 'price_range']]
+    matches_filtered = matches[['name','type', 'price_range', 'locality']]
     matches_filtered_json = matches_filtered.to_json(orient='records')
     return matches_filtered_json
 

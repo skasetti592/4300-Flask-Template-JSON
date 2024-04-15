@@ -6,113 +6,300 @@
 <link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap"
     rel="stylesheet">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Price Range Selector</title>
-    <style>
-        .price-range-label {
-            font-size: 16px;
-        }
-    </style>
-</head>
-
 <body>
     <div class="full-body-container">
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-4">F</h1>
-                <h1 id="google-3">O</h1>
-                <h1 id="google-0-1">O</h1>
-                <h1 id="google-0-2">D</h1>
-                <h1 id="google-0-1">I</h1>
-                <h1 id="google-3">E</h1>
-                <h1 id="google-4">$</h1>
-            </div>
-
-            <div class="input-box" onclick="sendPFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a type of establishment e.g. Bar" id="filter-text-val"
-                    onkeyup="filterText()">
+            <div class="container">
+                <div class="header">
+                    <img src="../static/images/plane.jpg" width=80px height=80px />
+                    <h1>Grub City</h1>
+                </div>
             </div>
         </div>
-        <div id="answer-box">
+
+        <div class="first-row">
+            <div class="price-button">
+                <label for="price-range" class="price-text">Select Price Range:</label>
+                <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
+                <div class="price-range-label">
+                    <output id="price-output">N/A</output>
+                </div>
+            </div>
+
+            <div class="location-label">
+                <label for="locality" class="centered-label">Location:</label>
+                <select name="locality" id="locality">
+                    <option id="loc-output" value="" disabled selected hidden>Select your preferred location</option>
+                    <option id="loc-output" value="NJ">NJ</option>
+                    <option id="loc-output" value="NY">NY</option>
+                    <option id="loc-output" value="TX">TX</option>
+                    <option id="loc-output" value="WA">WA</option>
+                </select>
+                <div id="selected-locality"></div>
+            </div>
         </div>
 
-        <label for="price-range">Select Price Range:</label><br>
-        <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
-        <div class="price-range-label">
-            <output id="price-output">NA</output>
-        </div>
+
+        <form id="inputValues">
+            <div class="main-container">
+                <div class="inputs">
+                    <h2>Morning</h2>
+                    <p> Description for the morning:
+                        <input class="inputBox" onclick="sendFocus()" input
+                            placeholder="Search for desired vibes (e.g. cozy)" id="preferences_morn"
+                            onkeyup="filterText()" type="text" name="text" style="width: 80%;">
+                    </p>
+                </div>
+
+                <div id="answer-box-1" ;>
+                </div>
+            </div>
+
+            <div class="main-container">
+                <div class="inputs">
+                    <h2>Evening</h2>
+                    <p> Description for the evening:
+                        <input class="inputBox" onclick="sendFocus2()" input
+                            placeholder="Search for desired vibes (e.g. cozy)" id="preferences_even"
+                            onkeyup="filterText2()" type="text" name="text" style="width: 80%;">
+                    </p>
+                </div>
+
+                <div id="answer-box-2">
+                </div>
+            </div>
 
 
-        <script>
-            const priceRangeInput = document.getElementById('price-range');
-            const priceOutput = document.getElementById('price-output');
+        </form>
+    </div>
 
-            priceRangeInput.addEventListener('input', function () {
-                let priceSymbol = '';
-                switch (parseInt(this.value)) {
-                    case 1:
-                        priceSymbol = 'NA';
-                        break;
-                    case 2:
-                        priceSymbol = '$';
-                        break;
-                    case 3:
-                        priceSymbol = '$$';
-                        break;
-                    case 4:
-                        priceSymbol = '$$$';
-                        break;
-                    default:
-                        priceSymbol = 'NA';
-                        break;
-                }
-                priceOutput.textContent = priceSymbol;
-                filterText();
-            });
+    <script>
 
+        const priceRangeInput = document.getElementById('price-range');
+        const LocInput = document.getElementById('locality');
+        const priceOutput = document.getElementById('price-output');
+        const LocOutput = document.getElementById('loc-output');
 
-            function answerBoxTemplate(title, titleDesc, rating) {
-                return `<div class=''>
+        priceRangeInput.addEventListener('input', updateFilters);
+        LocInput.addEventListener('input', updateFilters);
+
+        function updateFilters() {
+            document.getElementById('selected-locality').textContent = LocInput.options[LocInput.selectedIndex].text;
+            let priceSymbol = '';
+            switch (parseInt(priceRangeInput.value)) {
+                case 1:
+                    priceSymbol = 'NA';
+                    break;
+                case 2:
+                    priceSymbol = '$';
+                    break;
+                case 3:
+                    priceSymbol = '$$';
+                    break;
+                case 4:
+                    priceSymbol = '$$$';
+                    break;
+                default:
+                    priceSymbol = 'NA';
+                    break;
+            }
+            priceOutput.textContent = priceSymbol;
+
+            let locCity = '';
+            const selectedOption = LocInput.value;
+            switch (selectedOption) {
+                case 'TX':
+                    locCity = 'TX';
+                    break;
+                case 'NJ':
+                    locCity = 'NJ';
+                    break;
+                case 'NY':
+                    locCity = 'NY';
+                    break;
+                case 'WA':
+                    locCity = 'WA';
+                    break;
+            }
+            LocOutput.textContent = locCity;
+            filterText();
+            filterText2();
+        }
+
+        function answerBoxTemplate(title, titleDesc, rating, loc) {
+            const stateAB = loc.split(',')[1].trim().split(' ')[0];
+            return `<div class=''>
                     <h3 class='episode-title'>${title}</h3>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${rating}</p>
+                    <p class='episode-desc'>${stateAB}</p>
                 </div>`;
-            }
+        }
 
-            function sendFocus() {
-                document.getElementById('filter-text-val').focus();
-            }
 
-            function filterText() {
-                document.getElementById("answer-box").innerHTML = "";
+        function sendFocus() {
+            document.getElementById("preferences_morn").focus();
+        }
 
-                const filterText = document.getElementById("filter-text-val").value;
-                const priceRange = document.getElementById('price-range').value;
+        function filterText() {
+            document.getElementById("answer-box-1").innerHTML = "";
 
-                fetch("/episodes?" + new URLSearchParams({ title: filterText, price_range: priceRange }).toString())
-                    .then((response) => response.json())
-                    .then((data) => {
-                        data.forEach(row => {
-                            // Check if the row's price range matches the selected price range
+            const filterText = document.getElementById("preferences_morn").value;
+            const priceRange = document.getElementById('price-range').value;
+            const locationCity = document.getElementById('locality').value;
+
+            fetch("/episodes?" + new URLSearchParams({ title: filterText, price_range: priceRange, locality: locationCity }).toString())
+                .then((response) => response.json())
+                .then((data) => {
+                    data.forEach(row => {
+                        if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
                             if (row.price_range === '$' && priceRange === '2') {
                                 let tempDiv = document.createElement("div");
-                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
-                                document.getElementById("answer-box").appendChild(tempDiv);
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
                             } else if (row.price_range === '$$' && priceRange === '3') {
                                 let tempDiv = document.createElement("div");
-                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
-                                document.getElementById("answer-box").appendChild(tempDiv);
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
                             } else if (row.price_range === '$$$' && priceRange === '4') {
                                 let tempDiv = document.createElement("div");
-                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range);
-                                document.getElementById("answer-box").appendChild(tempDiv);
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
                             }
-                        });
-                    });
-            }
+                        } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            }
+                        } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            }
+                        } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-1").appendChild(tempDiv);
+                            }
+                        }
 
-        </script>
+                    });
+                });
+        }
+
+        function answerBoxTemplate2(title, titleDesc, rating, loc) {
+            const stateAB = loc.split(',')[1].trim().split(' ')[0];
+            return `<div class=''>
+                    <h3 class='episode-title'>${title}</h3>
+                    <p class='episode-desc'>${titleDesc}</p>
+                    <p class='episode-desc'>${rating}</p>
+                    <p class='episode-desc'>${stateAB}</p>
+                </div>`;
+        }
+
+
+        function sendFocus2() {
+            document.getElementById("preferences_even").focus();
+        }
+
+        function filterText2() {
+            document.getElementById("answer-box-2").innerHTML = "";
+
+            const filterText2 = document.getElementById("preferences_even").value;
+            const priceRange2 = document.getElementById('price-range').value;
+            const locationCity2 = document.getElementById('locality').value;
+
+            fetch("/episodes?" + new URLSearchParams({ title: filterText2, price_range: priceRange2, locality: locationCity2 }).toString())
+                .then((response) => response.json())
+                .then((data) => {
+                    data.forEach(row => {
+                        if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            }
+                        } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            }
+                        } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            }
+                        } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
+                            if (row.price_range === '$' && priceRange === '2') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$' && priceRange === '3') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            } else if (row.price_range === '$$$' && priceRange === '4') {
+                                let tempDiv = document.createElement("div");
+                                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                                document.getElementById("answer-box-2").appendChild(tempDiv);
+                            }
+                        }
+
+                    });
+                });
+        }
+    </script>
 </body>
