@@ -169,7 +169,7 @@
 
                 fetch("/episodes?" + new URLSearchParams({ title: filterText2, price_range: priceRange2 }).toString())
                     .then((response) => response.json())
-                    .then((data) => {
+                    .then((data) => {    
                         data.forEach(row => {
                             // Check if the row's price range matches the selected price range
                             if (row.price_range === '$' && priceRange2 === '2') {
