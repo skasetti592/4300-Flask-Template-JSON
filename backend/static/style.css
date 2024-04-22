@@ -1,3 +1,39 @@
+@font-face {
+    font-family: 'Satoshi';
+    src: url('/static/fonts/satoshi-regular.ttf');
+}
+
+@font-face {
+    font-family: 'Satoshi Bold';
+    src: url('/static/fonts/satoshi-bold.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('/static/fonts/poppins-regular.ttf');
+}
+
+@font-face {
+    font-family: 'Poppins Bold';
+    src: url('/static/fonts/poppins-bold.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic';
+    src: url('/static/fonts/nanumgothic-regular.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic Bold';
+    src: url('/static/fonts/nanumgothic-bold.ttf');
+}
+
+@font-face {
+    font-family: 'NanumGothic Extrabold';
+    src: url('/static/fonts/nanumgothic-extrabold.ttf');
+}
+
+
 .full-body-container {
     position: relative;
     top: 0;
@@ -10,25 +46,107 @@
     justify-content: start;
     align-items: center;
     flex-direction: column;
-    float: left;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header img {
+    margin-top: 20px;
+    width: 75px;
+    height: 75px;
+}
+
+.header h1 {
+    font-family: 'Poppins Bold';
+    font-size: 320%;
+    margin-top: 10px;
+}
+
+.price-button {
+    font-family: 'Satoshi Bold';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.price-button input {
+    width: 75%;
+}
+
+h2 {
+    font-family: 'Poppins Bold';
+    text-align: center;
+}
+
+h3 {
+    font-family: 'Satoshi Bold';
+    text-align: center;
+}
+
+label {
+    font-family: 'Poppins';
+    text-align: center;
+}
+
+.centered-label {
+    text-align: center;
+}
+
+.inputs label,
+.inputs select {
+    text-align: center;
+}
+
+.price-range-label {
+    text-align: center;
 }
 
 select {
-
     padding: 8px 15px;
     border: none;
     border-radius: 4px;
     background-color: #FF8C00;
+    font-family: 'Satoshi Bold';
+    text-align-last: center;
+    text-align: center;
+    -moz-text-align-last: center;
+}
+
+.location-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+
+
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
 }
 
 #preferences {
-    font-family: Lucida Console, Courier New, monospace;
+    font-family: 'Satoshi Bold';
     width: 100%
 }
 
-form {
-    display: flex;
-    justify-content: space-between;
+form>* {
+    width: 50%
 }
 
 .container {
@@ -38,50 +156,73 @@ form {
     align-items: center;
 }
 
-.header img {
-    margin-top: 20px;
-    width: 75px;
-    height: 75px;
-    padding-left: 100px;
-
-}
-
-.header h1 {
-    font-family: Lucida Console, Courier New, monospace;
-    font-size: 300%;
-    margin-top: 10px;
+.price-text {
+    font-size: 20px;
 }
 
 .inputBox {
     padding: 6px;
-    margin-top: 8px;
-    margin-right: 16px;
-    font-size: 13px;
+    margin-top: auto;
+    margin-right: auto;
+    font-size: 15px;
+    text-align: center;
 }
 
 .inputs {
     flex-basis: 45%;
     padding-left: 100px;
     padding-right: 100px;
-    margin-bottom: 100px;
-}
-
-.input-container {
+    margin-bottom: auto;
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
 }
 
-.input-container>* {
-    flex-basis: calc(50% - 10px);
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.main-container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+.inputBox {
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    /* This will center the input box if its width is less than 100% */
+}
+
+.description {
+    margin-top: -25px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
 }
 
 #answer-box-1,
 #answer-box-2 {
-    border: solid 2px red;
+    border: solid 2px white;
     /* Adjust border color as needed */
     width: 80%;
     /* Adjust width as needed */
-    margin-right: 200px;
-    margin-top: 400px;
+    margin: auto;
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    transform: translateX(-50%)
+}
+
+.input-container,
+#answer-box-1,
+#answer-box-2 {
+    flex-basis: 50%
 }
