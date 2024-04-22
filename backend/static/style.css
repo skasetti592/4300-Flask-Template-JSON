@@ -79,6 +79,18 @@
     width: 75%;
 }
 
+.update-button,
+.it-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+    font-weight: 700;
+}
+
 h2 {
     font-family: 'Poppins Bold';
     text-align: center;
@@ -126,8 +138,6 @@ select {
     margin-top: 15px;
     font-size: 20px;
     font-family: 'Satoshi Bold';
-
-
 }
 
 p {
