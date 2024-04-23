@@ -33,15 +33,26 @@
     src: url('/static/fonts/nanumgothic-extrabold.ttf');
 }
 
+body {
+    background-color: #FFBF86;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    max-width: 100%;
+
+}
 
 .full-body-container {
-    position: relative;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
     height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -65,6 +76,7 @@
     font-family: 'Poppins Bold';
     font-size: 320%;
     margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 .price-button {
@@ -194,10 +206,9 @@ form>* {
 }
 
 .inputBox {
-    display: block;
+    display: flex;
     width: 100%;
     margin: 0 auto;
-    /* This will center the input box if its width is less than 100% */
 }
 
 .description {
@@ -208,14 +219,36 @@ form>* {
 
 }
 
+.load-new-page {
+    display: flex;
+    background: #FF8C00;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Satoshi Bold';
+    text-align-last: center;
+    text-align: center;
+    -moz-text-align-last: center;
+    transition-duration: 0.4s;
+
+
+}
+
+.load-new-page:hover {
+    background-color: #b26200;
+    color: white;
+}
+
+
 #answer-box-1,
 #answer-box-2 {
     border: solid 2px white;
-    /* Adjust border color as needed */
     width: 80%;
-    /* Adjust width as needed */
     margin: auto;
-    position: absolute;
     top: 150px;
     left: 50%;
     transform: translateX(-50%)
@@ -225,4 +258,23 @@ form>* {
 #answer-box-1,
 #answer-box-2 {
     flex-basis: 50%
+}
+
+.spinner {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

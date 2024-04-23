@@ -7,6 +7,7 @@ import pandas as pd
 import foodies_cossim as fc
 import foodies_svd as svd 
 import foodies_rocchio as rocchio
+import shutil
 
 # ROOT_PATH for linking with all your files. 
 # Feel free to use a config.py or settings.py with a global export variable
@@ -44,6 +45,8 @@ def cossim_search(query):
     return matches_filtered_json 
     
 def svd_search(query, price_range): 
+    if query is None:
+        query = ''
     results = svd.svd_results(restaurants_df, query)
     print(results)
     df = pd.DataFrame(results, columns=['name'])
@@ -78,14 +81,26 @@ def json_search(query):
     return matches_filtered_json
 
 @app.route("/")
+# def home():
+#     return render_template('base.html',title="sample html")
 def home():
-    return render_template('base.html',title="sample html")
+    try: shutil.rmtree(os.environ['ROOT_PATH'] + '/static/viz')
+    except FileNotFoundError as e:
+        pass
+    # return home page
+    return render_template('home.html')
 
-@app.route("/episodes")
+
+@app.route("/results")
 def episodes_search():
+    if not os.path.exists("static/viz"):
+        os.mkdir("static/viz")
+
     text = request.args.get("title")
     price_range = request.args.get("price_range")
-    return rocchio_search(text, price_range)
+    svd_results = svd_search(text, price_range)
+
+    return render_template('results.html')
 
 if 'DB_NAME' not in os.environ:
     app.run(debug=True,host="0.0.0.0",port=5000)

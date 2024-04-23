@@ -1,16 +1,40 @@
 <!doctype html>
+<title>{% block title %}{% endblock %} GrubCity</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<head>
-  <title>
-    {% block title %} {% endblock %}
-  </title>
+<body style="background-color:#FFBF86;">
+  <div class="full-body-container">
+    <div class="top-text">
+      <div class="container">
+        <div class="header">
+          <img src="../static/images/plane.jpg" width=80px height=80px />
+          <h1>Grub City</h1>
+        </div>
+      </div>
+    </div>
 
-  <!-- fonts -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <div class="first-row">
+      <div class="price-button">
+        <label for="price-range" class="price-text">Select Price Range:</label>
+        <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
+        <div class="price-range-label">
+          <output id="price-output">N/A</output>
+        </div>
+      </div>
 
-</head>
+      <div class="location-label">
+        <label for="locality" class="centered-label">Location:</label>
+        <select name="locality" id="locality">
+          <option id="loc-output" value="" disabled selected hidden>Select your preferred location</option>
+          <option id="loc-output" value="NJ">NJ</option>
+          <option id="loc-output" value="NY">NY</option>
+          <option id="loc-output" value="TX">TX</option>
+          <option id="loc-output" value="WA">WA</option>
+        </select>
+        <div id="selected-locality"></div>
+      </div>
+    </div>
 
-<<<<<<< Updated upstream
 
     <form id="inputValues">
       <div class="main-container-wrapper">
@@ -100,16 +124,16 @@
       filterText2();
     }
 
-    function answerBoxTemplate(title, titleDesc, rating, loc) {
-      const stateAB = loc.split(',')[1].trim().split(' ')[0];
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
       return `<div class=''>
                     <h3 class='episode-title'>${title}</h3>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${rating}</p>
-                    <p class='episode-desc'>${stateAB}</p>
+                    <p class='episode-desc'>${street_address, locality}</p>
+                    <p> <a href=${trip_advisor_url} target="_blank">Link to Website!</a>
+                    <p class='episode-desc'>${comments}</p>
                 </div>`;
     }
-
 
     function sendFocus() {
       document.getElementById("preferences_morn").focus();
@@ -129,57 +153,57 @@
             if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
               if (row.price_range === '$' && priceRange === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               }
             } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
               if (row.price_range === '$' && priceRange === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               }
             } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
               if (row.price_range === '$' && priceRange === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               }
             } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
               if (row.price_range === '$' && priceRange === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-1").appendChild(tempDiv);
               }
             }
@@ -188,13 +212,14 @@
         });
     }
 
-    function answerBoxTemplate2(title, titleDesc, rating, loc) {
-      const stateAB = loc.split(',')[1].trim().split(' ')[0];
+    function answerBoxTemplate2(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
       return `<div class=''>
                     <h3 class='episode-title'>${title}</h3>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${rating}</p>
-                    <p class='episode-desc'>${stateAB}</p>
+                    <p class='episode-desc'>${street_address, locality}</p>
+                    <p> <a href=${trip_advisor_url} target="_blank">Link to Website!</a>
+                    <p class='episode-desc'>${comments}</p>
                 </div>`;
     }
 
@@ -218,57 +243,57 @@
 
               if (row.price_range === '$' && priceRange2 === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange2 === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange2 === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               }
             } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
               if (row.price_range === '$' && priceRange2 === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange2 === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange2 === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               }
             } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
               if (row.price_range === '$' && priceRange2 === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange2 === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange2 === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               }
             } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
               if (row.price_range === '$' && priceRange2 === '2') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$' && priceRange2 === '3') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               } else if (row.price_range === '$$$' && priceRange2 === '4') {
                 let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.locality);
+                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
                 document.getElementById("answer-box-2").appendChild(tempDiv);
               }
             }
@@ -277,8 +302,4 @@
         });
     }
   </script>
-=======
-<body>
-  {% block body %} {% endblock %}
->>>>>>> Stashed changes
 </body>
