@@ -122,11 +122,9 @@
     cursor: pointer;
 }
 
-
 .show {
     display: block;
 }
-
 
 .update-button,
 .it-button {
@@ -256,7 +254,20 @@ form>* {
     display: block;
     width: 100%;
     margin: 0 auto;
-    /* This will center the input box if its width is less than 100% */
+}
+
+.button {
+    margin-top: 15px;
+}
+
+
+.button button {
+    border-radius: 50px;
+    font-size: 18px;
+    padding: 12px;
+    border-color: black;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
 }
 
 .description {
@@ -270,9 +281,7 @@ form>* {
 #answer-box-1,
 #answer-box-2 {
     /* border: solid 2px white; */
-    /* Adjust border color as needed */
     /* width: 80%; */
-    /* Adjust width as needed */
     margin: auto;
     position: absolute;
     top: 150px;
