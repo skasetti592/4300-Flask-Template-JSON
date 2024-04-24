@@ -95,7 +95,7 @@ def home():
 def episodes_search():
     if not os.path.exists("static/viz"):
         os.mkdir("static/viz")
-
+    
     text = request.args.get("title")
     price_range = request.args.get("price_range")
     svd_results = svd_search(text, price_range)

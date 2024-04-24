@@ -71,10 +71,6 @@
 
     <button onclick='newPage()' class='load-new-page'>Create Itinerary</button>
 
-    <!--<div id="loading" style="display: none;">
-      <div class="spinner"></div>
-    </div>-->
-
   </div>
 
   <script>
@@ -88,7 +84,7 @@
     priceRangeInput.addEventListener('input', updateFilters);
     LocInput.addEventListener('input', updateFilters);
 
-    let locCity = '';
+    var locCity;
 
     function updateFilters() {
       document.getElementById('selected-locality').textContent = LocInput.options[LocInput.selectedIndex].text;
@@ -134,9 +130,6 @@
 
 
     function newPage() {
-      var title = document.getElementById('title').value;
-      var price_range = document.getElementById('price-range').value;
-
 
       window.location.href = '/results?city=' + locCity
     }
