@@ -71,6 +71,8 @@
 
     <button onclick='newPage()' class='load-new-page'>Create Itinerary</button>
 
+    <div class="loading"></div>
+
   </div>
 
   <script>
@@ -127,11 +129,17 @@
       filterText();
       filterText2();
     }
+    document.querySelector('.loading').classList.add('hidden');
 
 
     function newPage() {
 
+
+      document.querySelector('.loading').classList.remove('hidden');
+
       window.location.href = '/results?city=' + locCity
+
+
     }
 
     function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
