@@ -66,9 +66,9 @@ def svd_results(df, query):
     print('oh no')
 
   # NEW - actual svd code
-  print("INPUT PROJECT: " + query)
-  print("CLOSEST PROJECTS:")
-  print("Using SVD:")
+  #print("INPUT PROJECT: " + query)
+  #print("CLOSEST PROJECTS:")
+  #print("Using SVD:")
 
   results = set()
 
@@ -78,8 +78,9 @@ def svd_results(df, query):
           #if df.loc[i, 'Evening'] == 1: # parameter - change these based on whether it is morning or evening, right now i put for evening
       temp = df.loc[i, 'name']
       results.add(temp)
-  
+      
   else:
+    
     for title, score, i in closest_projects(0, docs_compressed_normed):
       #if df.loc[i, 'State Abbreviation'] == location: # parameter
         #if df.loc[i, 'Evening'] == 1: # parameter - change these based on whether it is morning or evening, right now i put for evening
@@ -90,10 +91,11 @@ def svd_results(df, query):
         if t in qtypes:
           found = True
 
-      print(found)
-      print(temp)
+      #print(found)
+      #print(temp)
       if found:
         temp = df.loc[i, 'name']
         results.add(temp)
+        
 
   return results
