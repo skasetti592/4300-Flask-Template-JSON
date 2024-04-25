@@ -122,22 +122,6 @@
     cursor: pointer;
 }
 
-.show {
-    display: block;
-}
-
-.update-button,
-.it-button {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 15px;
-    font-size: 20px;
-    font-family: 'Satoshi Bold';
-    font-weight: 700;
-}
-
 h2 {
     font-family: 'Poppins Bold';
     text-align: center;
@@ -256,12 +240,14 @@ form>* {
     margin: 0 auto;
 }
 
-.button {
-    margin-top: 15px;
-}
-
-
+.update-button,
+.it-button,
 .button button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
     border-radius: 50px;
     font-size: 18px;
     padding: 12px;
@@ -269,6 +255,7 @@ form>* {
     background-color: rgb(255, 255, 255);
     cursor: pointer;
 }
+
 
 .description {
     margin-top: -25px;

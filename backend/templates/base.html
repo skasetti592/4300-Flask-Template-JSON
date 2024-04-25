@@ -22,7 +22,7 @@
                 <label for="price-range" class="price-text">Select Price Range:</label>
                 <input type="range" id="price-range" name="price-range" min="1" max="4" step="1" value="1">
                 <div class="price-range-label">
-                    <output id="price-output">N/A</output>
+                    <output id="price-output">NA</output>
                 </div>
             </div>
 
@@ -38,14 +38,12 @@
                 <div id="selected-locality"></div>
             </div>
             <div class="update-button">
-                <button style="background-color:#e79247;" class="centered-label"
-                    onclick="updateButtonClick('button1')">Update
+                <button class="centered-label" onclick="updateButtonClick('button1')">Update
                     Now</button>
             </div>
 
             <div class="it-button">
-                <button style="background-color:#e79247;" class="centered-label"
-                    onclick="itButtonClick('button2')">Generate
+                <button class="centered-label" onclick="itButtonClick('button2')">Generate
                     Itinerary</button>
             </div>
         </div>
@@ -205,7 +203,6 @@
         }
 
         function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
-            const stateAB = loc.split(',')[1].trim().split(' ')[0];
             return `<div class='answer-box-item'>
         <h3 class='episode-title'>${title}</h3>
         <p class='episode-desc'>${titleDesc}</p>
@@ -343,7 +340,6 @@
         }
 
         function answerBoxTemplate2(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
-            const stateAB = loc.split(',')[1].trim().split(' ')[0];
             return `<div class='answer-box-item'>
                 <h3 class='episode-title'>${title}</h3>
         <p class='episode-desc'>${titleDesc}</p>
