@@ -13,10 +13,11 @@ from numpy import linalg as LA
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 
+
 # loading dataset
 #df = pd.read_csv("dataset.csv")
 
-def rocchio_results(df, query, price_range):
+def rocchio_results(df, query, price_range, feedback):
   #print("Value of price_range:", price_range)
   final_price = price_range
   if price_range == '2': 
@@ -52,55 +53,60 @@ def rocchio_results(df, query, price_range):
     if t in types:
       qtypes.add(t)
 
-  relevant_docs = []  # list of relevant document indices
-  non_relevant_docs = []  # list of non-relevant document indices
+    relevant_docs = feedback # list of relevant document indices
+    non_relevant_docs = []  # list of non-relevant document indices
 
-  # Rocchio algorithm parameters
-  alpha = 1  # weight for the query vector
-  beta = 0.75  # weight for the relevant documents vector
-  gamma = 0.25  # weight for the non-relevant documents vector
+    # Extract relevant and non-relevant document indices from feedback
+    #for entry in feedback:
+     #   if entry['liked']:
+      #      relevant_docs.append(entry['restaurant_id'])
+       # else:
+        #    non_relevant_docs.append(entry['restaurant_id'])
 
-  # Updating the query vector based on relevant and non-relevant documents
-  query_vector = alpha * query_tfidf  # initialize query vector with alpha * query_tfidf
+    # Rocchio algorithm parameters
+    alpha = 1  # weight for the query vector
+    beta = 0.75  # weight for the relevant documents vector
+    gamma = 0.25  # weight for the non-relevant documents vector
 
-  if relevant_docs:
-    relevant_vectors = tfidf_matrix[relevant_docs]
-    relevant_vector = np.mean(relevant_vectors, axis=0)  # calculate the mean vector of relevant documents
-    query_vector += beta * relevant_vector  # update query vector with beta * relevant_vector
+    # Initialize query vector
+    query_vector = alpha * query_tfidf  # initialize query vector with alpha * query_tfidf
 
-  if non_relevant_docs:
-    non_relevant_vectors = tfidf_matrix[non_relevant_docs]
-    non_relevant_vector = np.mean(non_relevant_vectors, axis=0)  # calculate the mean vector of non-relevant documents
-    query_vector -= gamma * non_relevant_vector  # update query vector with gamma * non_relevant_vector
+    # Update query vector based on relevant documents
+    if relevant_docs:
+        relevant_vectors = tfidf_matrix[relevant_docs]
+        relevant_vector = np.mean(relevant_vectors, axis=0)
+        query_vector += beta * relevant_vector
 
-  # Calculate cosine similarity between updated query vector and all documents
-  rocchio_cossims = []
-  for i in range(len(tfidf_matrix)):
-    doc = tfidf_matrix[i]
-    mov1norm = np.sqrt(np.sum(np.square(query_vector)))  # get the norm of the vector
-    mov2norm = np.sqrt(np.sum(np.square(doc)))  # get the norm of the vector
-    num = np.dot(query_vector, doc)  # dot product the vectors
-    den = mov1norm * mov2norm  # dot product the norms
-    if den == 0:
-      rocchio_cossims.append((i, 0))
+    # Update query vector based on non-relevant documents
+    if non_relevant_docs:
+        non_relevant_vectors = tfidf_matrix[non_relevant_docs]
+        non_relevant_vector = np.mean(non_relevant_vectors, axis=0)
+        query_vector -= gamma * non_relevant_vector
+
+    # Calculate cosine similarity between updated query vector and all documents
+    rocchio_cossims = []
+    for i in range(len(tfidf_matrix)):
+        doc = tfidf_matrix[i]
+        mov1norm = np.sqrt(np.sum(np.square(query_vector)))  # get the norm of the vector
+        mov2norm = np.sqrt(np.sum(np.square(doc)))  # get the norm of the vector
+        num = np.dot(query_vector, doc)  # dot product the vectors
+        den = mov1norm * mov2norm  # dot product the norms
+        if den == 0:
+            rocchio_cossims.append((i, 0))
+        else:
+            temp = num / den
+            rocchio_cossims.append((i, temp))
+
+    rocchio_cossims_sorted = sorted(rocchio_cossims, key=lambda x: x[1], reverse=True)
+
+    # Return the top restaurant names after applying Rocchio algorithm
+    top_restaurants = []
+    threshold = 5
+    num = len(rocchio_cossims_sorted)
+    if len(qtypes) == 0 or len(rocchio_cossims_sorted) < threshold:
+        for i in range(5):
+            top_restaurants.append(df.at[rocchio_cossims_sorted[i][0], 'name'])
     else:
-      temp = num / den
-      rocchio_cossims.append((i, temp))
-
-  rocchio_cossims_sorted = sorted(rocchio_cossims, key=lambda x: x[1], reverse=True)
-
-  # Print the top 5 results after applying Rocchio algorithm
-  #print("Rocchio Results:")
-  final = []
-  threshold = 5
-  num = len(rocchio_cossims_sorted)
-  if len(qtypes) == 0 or len(rocchio_cossims_sorted) < threshold:
-    for i in range(300):
-      #if df.loc[i, 'price_range'] == final_price:
-        final.append(df.at[rocchio_cossims_sorted[i][0], 'name'])
-  else:
-    for i in range(300):
-      #if df.loc[i, 'price_range'] == final_price:
-        final.append(df.at[rocchio_cossims_sorted[i][0], 'name'])
-  return final 
-  
+        for i in range(5):
+            top_restaurants.append(df.at[rocchio_cossims_sorted[i][0], 'name'])
+    return top_restaurants

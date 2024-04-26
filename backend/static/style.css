@@ -79,6 +79,68 @@
     width: 75%;
 }
 
+.answer-box-item {
+    border: 1px solid black;
+    background-color: #ffd6b7;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 450px;
+}
+
+.button-container,
+.heart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.popup {
+    font-family: 'Poppins Bold';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 250px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup-content {
+    font-family: 'Poppins Bold';
+    text-align: center;
+}
+
+#closePopup {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+
+.show {
+    display: block;
+}
+
+.update-button,
+.it-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+    font-weight: 700;
+}
+
+
+
 h2 {
     font-family: 'Poppins Bold';
     text-align: center;
@@ -200,6 +262,20 @@ form>* {
     /* This will center the input box if its width is less than 100% */
 }
 
+.button {
+    margin-top: 15px;
+}
+
+
+.button button {
+    border-radius: 50px;
+    font-size: 18px;
+    padding: 12px;
+    border-color: black;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
 .description {
     margin-top: -25px;
     display: flex;
@@ -208,11 +284,13 @@ form>* {
 
 }
 
+
+
 #answer-box-1,
 #answer-box-2 {
-    border: solid 2px white;
+    /* border: solid 2px white; */
     /* Adjust border color as needed */
-    width: 80%;
+    /* width: 80%; */
     /* Adjust width as needed */
     margin: auto;
     position: absolute;
