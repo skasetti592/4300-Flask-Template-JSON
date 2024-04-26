@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import pandas as pd
-import foodies_rocchio as rocchio  # Import your Rocchio module
+import foodies_rocchio as rocchio
 import foodies_cossim as fc
 import foodies_svd as svd 
 from urllib.parse import unquote
@@ -47,7 +47,7 @@ def svd_search(query, price_range):
     #print(results)
     df = pd.DataFrame(results, columns=['name'])
     matches = pd.merge(df,restaurants_df, on='name') 
-    matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments", "id"]]
+    matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
     out = matches_filtered.sort_index()
     matches_filtered_json = out.to_json(orient='records')
     print(matches_filtered_json)
@@ -87,24 +87,39 @@ def rocchio_search(query, price_range, restaurant_ids):
     results = rocchio.rocchio_results(restaurants_df, query, price_range, restaurant_ids)
     df = pd.DataFrame(results, columns=['name'])
     matches = pd.merge(df, restaurants_df, on='name') 
-    matches_filtered = matches[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'id']]
+    matches_filtered = matches[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments']]
     out = matches_filtered.sort_index()
     matches_filtered_json = out.to_json(orient='records')
     return matches_filtered_json
+
+def name_to_id(restaurant_names, df):
+    name_to_id_map = df.set_index('name')['id'].to_dict()
+
+    restaurant_ids = [name_to_id_map[name] for name in restaurant_names]
+
+    return restaurant_ids
 
 @app.route("/episodes")
 def episodes_search():
     text = request.args.get("title")
     price_range = request.args.get("price_range")
-    morning_restaurant_ids = request.args.get("morning_restaurant_ids")
-    evening_restaurant_ids = request.args.get("evening_restaurant_ids")
+    morning_restaurant_names = request.args.get("morning_restaurant_ids")
+    evening_restaurant_names = request.args.get("evening_restaurant_ids")
 
-    if morning_restaurant_ids or evening_restaurant_ids:
-        results_morn_list = json.loads(morning_restaurant_ids)
-        results_even_list = json.loads(evening_restaurant_ids)
+    print("Morning restaurant ids before parsing:", morning_restaurant_names)  # print morning restaurant ids before parsing
+    print("Evening restaurant ids before parsing:", evening_restaurant_names)  # print evening restaurant ids before parsing
 
-        morning_restaurant_ids = [json.loads(id) for id in results_morn_list]
-        evening_restaurant_ids = [json.loads(id) for id in results_even_list]
+
+    if morning_restaurant_names or evening_restaurant_names:
+        results_morn_list = json.loads(morning_restaurant_names)
+        results_even_list = json.loads(evening_restaurant_names)
+
+
+        morning_restaurant_ids = name_to_id(morning_restaurant_names, restaurants_df)
+        evening_restaurant_ids = name_to_id(evening_restaurant_names, restaurants_df)
+
+        print("Morning restaurant ids:", morning_restaurant_ids)  # print morning restaurant ids
+
 
         results_morn = rocchio_search(text, price_range, morning_restaurant_ids)
         results_even = rocchio_search(text, price_range, evening_restaurant_ids)        

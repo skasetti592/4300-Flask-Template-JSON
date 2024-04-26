@@ -457,10 +457,10 @@
       const title2 = document.getElementById('preferences_even').value;
       const priceRange2 = document.getElementById('price-range').value;
 
-      const morningRestaurantIds = JSON.stringify(selectedRestaurants);
-      const eveningRestaurantIds = JSON.stringify(selectedRestaurants2);
+      const morningRestaurantnames = JSON.stringify(selectedRestaurants);
+      const eveningRestaurantnames = JSON.stringify(selectedRestaurants2);
 
-      fetch("/episodes?" + new URLSearchParams({ title: title, price_range: priceRange, morning_restaurant_ids: morningRestaurantIds, evening_restaurant_ids: eveningRestaurantIds }).toString())
+      fetch("/episodes?" + new URLSearchParams({ title: title, price_range: priceRange, morning_restaurant_names: morningRestaurantnames, evening_restaurant_names: eveningRestaurantnames }).toString())
         .then(response => response.json())
         .then(data => {
           document.getElementById("answer-box-1").innerHTML = "";

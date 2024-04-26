@@ -53,15 +53,15 @@ def rocchio_results(df, query, price_range, feedback):
     if t in types:
       qtypes.add(t)
 
-    relevant_docs = []  # list of relevant document indices
+    relevant_docs = feedback # list of relevant document indices
     non_relevant_docs = []  # list of non-relevant document indices
 
     # Extract relevant and non-relevant document indices from feedback
-    for entry in feedback:
-        if entry['liked']:
-            relevant_docs.append(entry['restaurant_id'])
-        else:
-            non_relevant_docs.append(entry['restaurant_id'])
+    #for entry in feedback:
+     #   if entry['liked']:
+      #      relevant_docs.append(entry['restaurant_id'])
+       # else:
+        #    non_relevant_docs.append(entry['restaurant_id'])
 
     # Rocchio algorithm parameters
     alpha = 1  # weight for the query vector
