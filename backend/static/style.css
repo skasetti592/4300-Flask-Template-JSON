@@ -50,21 +50,21 @@
 
 .header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    padding-bottom: 20px;
 }
 
 .header img {
-    margin-top: 20px;
     width: 75px;
     height: 75px;
+    margin-right: 10px;
 }
 
 .header h1 {
     font-family: 'Poppins Bold';
     font-size: 320%;
-    margin-top: 10px;
 }
 
 .price-button {
@@ -192,6 +192,17 @@ select {
 
 }
 
+.time-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+
+}
+
 p {
     font-family: 'Poppins', sans-serif;
     text-align: center;
@@ -271,17 +282,40 @@ form>* {
     border-radius: 50px;
     font-size: 18px;
     padding: 12px;
+    margin-left: 50px;
+
     border-color: black;
     background-color: rgb(255, 255, 255);
     cursor: pointer;
 }
 
+.button button:hover {
+    background-color: #FF8C00;
+}
+
 .description {
-    margin-top: -25px;
+    margin-top: none;
     display: flex;
     flex-direction: column;
     width: 100%;
 
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-row .update-button,
+.button-row .it-button {
+    margin: 0 10px;
+    background-color: #e79247
+}
+
+.button-row .update-button button:hover,
+.button-row .it-button button:hover {
+    background-color: #ffd6b7;
 }
 
 
@@ -296,11 +330,26 @@ form>* {
     position: absolute;
     top: 150px;
     left: 50%;
-    transform: translateX(-50%)
+    flex-basis: 50%;
+    transform: translateX(-20%)
 }
 
-.input-container,
-#answer-box-1,
-#answer-box-2 {
-    flex-basis: 50%
+.back-button {
+    position: fixed;
+    top: 17%;
+    left: 50%;
+    background-color: #e79247;
+    transform: translate(-50%, -50%);
+
+    /* Make the button bigger */
+    padding: 10px 20px;
+    font-size: 16px;
+
+    /* Transition for smooth color change */
+    transition: background-color 0.3s ease;
+}
+
+/* Change color on hover */
+.back-button:hover {
+    background-color: #ffd6b7;
 }

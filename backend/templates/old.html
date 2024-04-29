@@ -120,4 +120,184 @@
 
 
 
+<div class="main-container">
+    <div class="inputs">
+        <h2>Evening</h2>
+    </div>
+    <div class="description">
+        <p> Description for the evening:
+            <input class="inputBox" onclick="sendFocus2()" input placeholder="Search for desired vibes (e.g. cozy)"
+                id="preferences_even" type="text" name="text" style="width: 80%;">
+        </p>
+    </div>
 
+    <div class="answer-box" id="answer-box-2">
+    </div>
+</div>
+
+
+function answerBoxTemplate2(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
+return `<div class='answer-box-item'>
+    <h3 class='episode-title'>${title}</h3>
+    <p class='episode-desc'>${titleDesc}</p>
+    <p class='episode-desc'>${rating}</p>
+    <p class='episode-desc'>${street_address, locality}</p>
+
+    <p><a href=${trip_advisor_url} target="_blank">
+            <img src="../static/images/chef.jpg" width="50" height="50">
+        </a></p>
+    <p class='episode-desc'>${comments}</p>
+    <div class="heart-container">
+        <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image-2" data-id="${title}"
+            onclick="toggleHeartImage2(this)" />
+    </div>
+
+</div>`;
+}
+
+
+function sendFocus2() {
+document.getElementById("preferences_even").focus();
+}
+
+function filterText2() {
+document.getElementById("answer-box-2").innerHTML = "";
+
+const filterText2 = document.getElementById("preferences_even").value;
+const priceRange2 = document.getElementById('price-range').value;
+const locationCity2 = document.getElementById('locality').value;
+
+console.log(filterText2)
+
+fetch("/episodes?" + new URLSearchParams({ title: filterText2, price_range: priceRange2, locality: locationCity2
+}).toString())
+.then((response) => response.json())
+.then((data) => {
+data.forEach(row => {
+if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
+
+if (row.price_range === '$' && priceRange2 === '2') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+
+} else if (row.price_range === '$$' && priceRange2 === '3') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+
+} else if (row.price_range === '$$$' && priceRange2 === '4') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+}
+} else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
+if (row.price_range === '$' && priceRange2 === '2') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+} else if (row.price_range === '$$' && priceRange2 === '3') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+} else if (row.price_range === '$$$' && priceRange2 === '4') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+}
+} else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
+if (row.price_range === '$' && priceRange2 === '2') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+} else if (row.price_range === '$$' && priceRange2 === '3') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+} else if (row.price_range === '$$$' && priceRange2 === '4') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+}
+} else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
+if (row.price_range === '$' && priceRange2 === '2') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+} else if (row.price_range === '$$' && priceRange2 === '3') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+console.log(row);
+
+} else if (row.price_range === '$$$' && priceRange2 === '4') {
+let tempDiv = document.createElement("div");
+tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv);
+}
+}
+});
+});
+}
+
+
+
+
+
+
+Update
+
+
+function updateButtonClick() {
+document.getElementById('answer-box-1').classList.toggle('update-button');
+const title = document.getElementById('preferences_morn').value;
+const priceRange = document.getElementById('price-range').value;
+
+/*document.getElementById('answer-box-2').classList.toggle('update-button');
+const title2 = document.getElementById('preferences_even').value;
+const priceRange2 = document.getElementById('price-range').value; */
+
+const morningRestaurantnames = JSON.stringify(selectedRestaurants);
+const eveningRestaurantnames = JSON.stringify(selectedRestaurants2);
+
+fetch("/episodes?" + new URLSearchParams({ title: title, price_range: priceRange, morning_restaurant_names:
+morningRestaurantnames, evening_restaurant_names: eveningRestaurantnames }).toString())
+.then(response => response.json())
+.then(data => {
+document.getElementById("answer-box-1").innerHTML = "";
+/* document.getElementById("answer-box-2").innerHTML = ""; */
+
+const half = Math.ceil(data.length / 2);
+const morningData = data.splice(0, half);
+const eveningData = data.splice(-half);
+
+morningData.forEach(row => {
+let tempDiv1 = document.createElement("div");
+tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-1").appendChild(tempDiv1);
+});
+
+/* eveningData.forEach(row => {
+let tempDiv2 = document.createElement("div");
+tempDiv2.innerHTML = answerBoxTemplate2(row.name, row.type, row.price_range, row.street_address, row.locality,
+row.trip_advisor_url, row.comments);
+document.getElementById("answer-box-2").appendChild(tempDiv2);
+}); */
+})
+.catch((error) => {
+console.error('Error:', error);
+});
+}

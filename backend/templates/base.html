@@ -33,65 +33,56 @@
         </select>
         <div id="selected-locality"></div>
       </div>
-      <div class="update-button">
-        <button style="background-color:#e79247;" class="centered-label" onclick="updateButtonClick('button1')">Update
-          Now</button>
+
+      <div class="time-label">
+        <label for="time" class="centered-label">Time:</label>
+        <select name="time" id="time">
+          <option id="time-output" value="" disabled selected hidden>Select your preferred time</option>
+          <option id="time-output" value="morning">Morning</option>
+          <option id="time-output" value="evening">Evening</option>
+          <option id="time-output" value="nightlife">Nightlife</option>
+        </select>
+        <div id="selected-time"></div>
       </div>
 
-      <div class="it-button">
-        <button style="background-color:#e79247;" class="centered-label" onclick="itButtonClick('button2')">Generate
-          Itinerary</button>
-      </div>
     </div>
 
 
     <form id="inputValues">
       <div class="main-container-wrapper">
         <div class="main-container">
-          <div class="inputs">
-            <h2>Morning</h2>
-          </div>
-          <div class=description>
-            <p> Description for the morning:
+          <div class="description">
+            <p> Description for the selected time:
               <input class="inputBox" onclick="sendFocus()" input placeholder="Search for desired vibes (e.g. cozy)"
-                id="preferences_morn" type="text" name="text" style="width: 80%;">
+                id="preferences_morn" type="text" name="text">
             </p>
           </div>
 
-          <div class="answer-box" id="answer-box-1" ;>
-          </div>
+          <div class="answer-box" id="answer-box-1"></div>
         </div>
 
         <div class="button" id="button">
           <button type="button" onclick="search()"> Search </button>
         </div>
 
-        <div class="main-container">
-          <div class="inputs">
-            <h2>Evening</h2>
-          </div>
-          <div class="description">
-            <p> Description for the evening:
-              <input class="inputBox" onclick="sendFocus2()" input placeholder="Search for desired vibes (e.g. cozy)"
-                id="preferences_even" type="text" name="text" style="width: 80%;">
-            </p>
+        <div class="button-row">
+          <div class="update-button">
+            <button class="centered-label" type=button onclick="updateButtonClick('button1')">Update
+              Now</button>
           </div>
 
-          <div class="answer-box" id="answer-box-2">
+          <div class="it-button">
+            <button class="centered-label" type=button onclick="itButtonClick('button2')">Generate
+              Itinerary</button>
           </div>
+
+
         </div>
-
-
-
     </form>
 
   </div>
 
   <script>
-    function itButtonClick(buttonId) {
-      const answerBoxId = buttonId === 'button1' ? 'answer-box-1' : 'answer-box-2';
-      document.getElementById(answerBoxId).classList.toggle('it-button');
-    }
 
     function showInfo(event, title, titleDesc, rating, loc) {
       event.preventDefault();
@@ -137,28 +128,6 @@
     priceRangeInput.addEventListener('input', updateFilters);
     LocInput.addEventListener('input', updateFilters);
 
-    let selectedRestaurants = [];
-
-    function toggleHeartImage(heartImage) {
-      const restaurantId = heartImage.dataset.id;
-      const imageUrl = heartImage.src;
-
-      // Add or remove restaurant ID based on heart state
-      if (imageUrl.includes('heart.png')) {
-        selectedRestaurants.push(restaurantId);
-        console.log(`Added ID: ${restaurantId}`); // Output the added ID
-      } else {
-        const index = selectedRestaurants.indexOf(restaurantId);
-        console.log(`Removed ID: ${restaurantId2}`); // Output the removed ID
-        if (index !== -1) {
-          selectedRestaurants.splice(index, 1);
-        }
-      }
-
-      // Toggle heart image
-      heartImage.src = imageUrl.includes('empty-heart.png') ?
-        '../static/images/heart.png' : '../static/images/empty-heart.png';
-    }
 
     function updateFilters() {
       document.getElementById('selected-locality').textContent = LocInput.options[LocInput.selectedIndex].text;
@@ -204,8 +173,50 @@
     function search() {
       sendFocus();
       filterText();
-      sendFocus2();
-      filterText2();
+    }
+
+    let morningSelect = [];
+    let eveningSelect = [];
+    let nightlifeSelect = [];
+
+    function toggleHeartImage(heartImage) {
+      const restaurantId = heartImage.dataset.id;
+      const imageUrl = heartImage.src;
+      const time = document.getElementById('time').value;
+
+      if (imageUrl.includes('heart.png')) {
+        if (time === 'morning') {
+          morningSelect.push(restaurantId);
+          console.log(time)
+        } else if (time === 'evening') {
+          eveningSelect.push(restaurantId);
+          console.log(time)
+        } else if (time === 'nightlife') {
+          nightlifeSelect.push(restaurantId);
+          console.log(time)
+        }
+      } else {
+        if (time === 'morning') {
+          const index = morningSelect.indexOf(restaurantId);
+          if (index !== -1) {
+            morningSelect.splice(index, 1);
+          }
+        } else if (time === 'evening') {
+          const index = eveningSelect.indexOf(restaurantId);
+          if (index !== -1) {
+            eveningSelect.splice(index, 1);
+          }
+        } else if (time === 'nightlife') {
+          const index = nightlifeSelect.indexOf(restaurantId);
+          if (index !== -1) {
+            nightlifeSelect.splice(index, 1);
+          }
+        }
+      }
+
+      // Toggle heart image
+      heartImage.src = imageUrl.includes('empty-heart.png') ?
+        '../static/images/heart.png' : '../static/images/empty-heart.png';
     }
 
 
@@ -239,252 +250,165 @@
 
       const priceRange = document.getElementById('price-range').value;
       const locationCity = document.getElementById('locality').value;
+      const time = document.getElementById('time').value;
 
       console.log(filterText)
 
 
-      fetch("/episodes?" + new URLSearchParams({ title: filterText, price_range: priceRange, locality: locationCity }).toString())
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.length == 0) {
-            document.getElementById("answer-box-1").innerHTML = "<p>No results found.</p>";
-          }
-          else {
-            data.forEach(row => {
-              if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
-                if (row.price_range === '$' && priceRange === '2') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$' && priceRange === '3') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$$' && priceRange === '4') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                }
-              } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
-                if (row.price_range === '$' && priceRange === '2') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$' && priceRange === '3') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$$' && priceRange === '4') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                }
-              } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
-                if (row.price_range === '$' && priceRange === '2') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$' && priceRange === '3') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$$' && priceRange === '4') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                }
-              } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
-                if (row.price_range === '$' && priceRange === '2') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$' && priceRange === '3') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                } else if (row.price_range === '$$$' && priceRange === '4') {
-                  let tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                  document.getElementById("answer-box-1").appendChild(tempDiv);
-
-                }
-              }
-            });
-          }
-        });
-    }
-
-    let selectedRestaurants2 = [];
-
-    function toggleHeartImage2(heartImage) {
-      const restaurantId2 = heartImage.dataset.id2;
-      const imageUrl2 = heartImage.src;
-
-      // Add or remove restaurant ID based on heart state
-      if (imageUrl2.includes('heart.png')) {
-        selectedRestaurants2.push(restaurantId2);
-        console.log(`Added ID: ${restaurantId}`); // Output the added ID
-
-      } else {
-        const index2 = selectedRestaurants2.indexOf(restaurantId2);
-        if (index2 !== -1) {
-          selectedRestaurants2.splice(index2, 1);
-          console.log(`Removed ID: ${restaurantId2}`); // Output the removed ID
-        }
-      }
-
-      heartImage.src = imageUrl2.includes('empty-heart.png') ?
-        '../static/images/heart.png' : '../static/images/empty-heart.png';
-    }
-
-    function answerBoxTemplate2(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
-      return `<div class='answer-box-item'>
-                    <h3 class='episode-title'>${title}</h3>
-                    <p class='episode-desc'>${titleDesc}</p>
-                    <p class='episode-desc'>${rating}</p>
-                    <p class='episode-desc'>${street_address, locality}</p>
-                    
-                    <p><a href=${trip_advisor_url} target="_blank">
-                      <img src="../static/images/chef.jpg" width="50" height="50">
-                      </a></p>
-                    <p class='episode-desc'>${comments}</p>
-                    <div class="heart-container">
-                      <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image-2" data-id = "${title}" onclick="toggleHeartImage2(this)" />
-                  </div>
-                  
-                </div>`;
-    }
-
-
-    function sendFocus2() {
-      document.getElementById("preferences_even").focus();
-    }
-
-    function filterText2() {
-      document.getElementById("answer-box-2").innerHTML = "";
-
-      const filterText2 = document.getElementById("preferences_even").value;
-      const priceRange2 = document.getElementById('price-range').value;
-      const locationCity2 = document.getElementById('locality').value;
-
-      console.log(filterText2)
-
-      fetch("/episodes?" + new URLSearchParams({ title: filterText2, price_range: priceRange2, locality: locationCity2 }).toString())
+      fetch("/episodes?" + new URLSearchParams({ query: filterText, price_range: priceRange, locality: locationCity, time: time }).toString())
         .then((response) => response.json())
         .then((data) => {
           data.forEach(row => {
-            if (LocOutput.textContent === 'NJ' && row.locality.split(',')[1].trim().split(' ')[0] === "NJ") {
-
-              if (row.price_range === '$' && priceRange2 === '2') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-
-              } else if (row.price_range === '$$' && priceRange2 === '3') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-
-              } else if (row.price_range === '$$$' && priceRange2 === '4') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              }
-            } else if (LocOutput.textContent === 'NY' && row.locality.split(',')[1].trim().split(' ')[0] === "NY") {
-              if (row.price_range === '$' && priceRange2 === '2') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              } else if (row.price_range === '$$' && priceRange2 === '3') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              } else if (row.price_range === '$$$' && priceRange2 === '4') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              }
-            } else if (LocOutput.textContent === 'WA' && row.locality.split(',')[1].trim().split(' ')[0] === "WA") {
-              if (row.price_range === '$' && priceRange2 === '2') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              } else if (row.price_range === '$$' && priceRange2 === '3') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              } else if (row.price_range === '$$$' && priceRange2 === '4') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              }
-            } else if (LocOutput.textContent === 'TX' && row.locality.split(',')[1].trim().split(' ')[0] === "TX") {
-              if (row.price_range === '$' && priceRange2 === '2') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              } else if (row.price_range === '$$' && priceRange2 === '3') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              } else if (row.price_range === '$$$' && priceRange2 === '4') {
-                let tempDiv = document.createElement("div");
-                tempDiv.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-                document.getElementById("answer-box-2").appendChild(tempDiv);
-              }
+            if (data.length == 0) {
+              let tempDiv = document.createElement("div");
+              tempDiv.innerHTML = "<p>No results found.</p>";
+              document.getElementById("answer-box-1").appendChild(tempDiv);
             }
-          });
+            else {
+              let tempDiv1 = document.createElement("div");
+              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+              document.getElementById("answer-box-1").appendChild(tempDiv1);
+            }
+          })
         });
     }
 
     function updateButtonClick() {
       document.getElementById('answer-box-1').classList.toggle('update-button');
-      const title = document.getElementById('preferences_morn').value;
+      const rocchio_query = document.getElementById('preferences_morn').value;
       const priceRange = document.getElementById('price-range').value;
+      const time = document.getElementById('time').value;
+      let restaurantNames;
 
-      document.getElementById('answer-box-2').classList.toggle('update-button');
-      const title2 = document.getElementById('preferences_even').value;
-      const priceRange2 = document.getElementById('price-range').value;
+      if (time === 'morning') {
+        restaurantNames = JSON.stringify(morningSelect);
+      } else if (time === 'evening') {
+        restaurantNames = JSON.stringify(eveningSelect);
+      } else if (time === 'nightlife') {
+        restaurantNames = JSON.stringify(nightlifeSelect);
+      }
 
-      const morningRestaurantnames = JSON.stringify(selectedRestaurants);
-      const eveningRestaurantnames = JSON.stringify(selectedRestaurants2);
+      console.log(restaurantNames)
+      console.log("before url search")
 
-      fetch("/episodes?" + new URLSearchParams({ title: title, price_range: priceRange, morning_restaurant_names: morningRestaurantnames, evening_restaurant_names: eveningRestaurantnames }).toString())
+      fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, price_range: priceRange, restaurant_names: restaurantNames }).toString())
         .then(response => response.json())
         .then(data => {
           document.getElementById("answer-box-1").innerHTML = "";
-          document.getElementById("answer-box-2").innerHTML = "";
-
-          const half = Math.ceil(data.length / 2);
-          const morningData = data.splice(0, half);
-          const eveningData = data.splice(-half);
-
-          morningData.forEach(row => {
+          data.forEach(row => {
             let tempDiv1 = document.createElement("div");
             tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
-          });
-
-          eveningData.forEach(row => {
-            let tempDiv2 = document.createElement("div");
-            tempDiv2.innerHTML = answerBoxTemplate2(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-            document.getElementById("answer-box-2").appendChild(tempDiv2);
           });
         })
         .catch((error) => {
           console.error('Error:', error);
         });
     }
+
+
+    function itButtonClick(buttonId) {
+
+      let backButton = document.createElement('button');
+      backButton.textContent = 'Back';
+      backButton.classList.add('centered-label', 'back-button');
+      backButton.onclick = resetPage;
+      document.body.appendChild(backButton);
+
+      document.querySelector('.first-row').style.display = 'none';
+      document.querySelector('.main-container-wrapper').style.display = 'none';
+
+
+      let boxContainer = document.createElement('div');
+      boxContainer.style.display = 'flex';
+      boxContainer.style.justifyContent = 'space-between';
+      document.body.appendChild(boxContainer);
+
+      let morningBox = document.createElement('div');
+      morningBox.id = 'morning-box';
+      boxContainer.appendChild(morningBox);
+
+      let eveningBox = document.createElement('div');
+      eveningBox.id = 'evening-box';
+      boxContainer.appendChild(eveningBox);
+
+      let nightlifeBox = document.createElement('div');
+      nightlifeBox.id = 'nightlife-box';
+      boxContainer.appendChild(nightlifeBox);
+
+      morningBox.style.flex = '1';
+      eveningBox.style.flex = '1';
+      nightlifeBox.style.flex = '1';
+
+      outputrest(morningSelect, 'morning-box', 'morning');
+      outputrest(eveningSelect, 'evening-box', 'evening');
+      outputrest(nightlifeSelect, 'nightlife-box', 'nightlife');
+
+    }
+
+    function resetPage() {
+      location.reload();
+    }
+
+    function outputrest(restaurants, containerId, timeOfDay) {
+      const container = document.getElementById(containerId);
+
+      if (container) {
+        container.innerHTML = "";
+
+        const timeOfDayElement = document.createElement("p");
+        timeOfDayElement.textContent = `Time of day: ${timeOfDay}`;
+        container.appendChild(timeOfDayElement);
+
+        if (restaurants.length === 0) {
+          let message;
+          switch (timeOfDay) {
+            case 'morning':
+              message = "No restaurants selected for the morning.";
+              break;
+            case 'evening':
+              message = "No restaurants selected for the evening.";
+              break;
+            case 'nightlife':
+              message = "No restaurants selected for nightlife.";
+              break;
+            default:
+              message = "No restaurants selected.";
+          }
+          const messageElement = document.createElement("p");
+          messageElement.textContent = message;
+          container.appendChild(messageElement);
+        } else {
+          restaurants.forEach((restaurant, index) => {
+            const restaurantName = document.createElement("p");
+            restaurantName.textContent = restaurant;
+            if (index < restaurants.length - 1) {
+              restaurantName.innerHTML += "<br>";
+            }
+            container.appendChild(restaurantName);
+          });
+        }
+      } else {
+        console.error(`Container with ID '${containerId}' not found.`);
+      }
+    }
+
+
+    /*function outputSelectedRestaurants(restaurants, containerId) {
+      if (restaurants.length === 0) {
+        // If no restaurants are selected for this time, display a message
+        let tempDiv = document.createElement("div");
+        tempDiv.innerHTML = "<p>No restaurants selected for this time.</p>";
+        document.getElementById(containerId).appendChild(tempDiv);
+      } else {
+        // Iterate over the restaurants and append them to the container
+        restaurants.forEach(row => {
+          let tempDiv1 = document.createElement("div");
+          tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+          document.getElementById("answer-box-1").appendChild(tempDiv1);
+        });
+      }
+    } */
+
   </script>
 </body>
