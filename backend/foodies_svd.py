@@ -17,6 +17,8 @@ import re
 
 def svd_results(df, query):
   # OLD - creating tf-idf matrix
+
+  
   reviews = df['comments'].tolist()
   tfidf_vectorizer = TfidfVectorizer()
   tfidf_matrix = tfidf_vectorizer.fit_transform(reviews).toarray()
@@ -94,8 +96,10 @@ def svd_results(df, query):
       #print(found)
       #print(temp)
       if found:
+        count+=1 
         temp = df.loc[i, 'name']
         results.add(temp)
+
         
 
   return results

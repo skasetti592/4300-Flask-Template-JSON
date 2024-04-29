@@ -22,6 +22,8 @@ json_file_path = os.path.join(current_directory, 'csvjson.json')
 with open(json_file_path, 'r', errors='ignore') as file:
     data = json.load(file)
     restaurants_df = pd.DataFrame(data['restaurants'])
+    restaurants_df = restaurants_df.drop_duplicates(subset=['name', 'comments'], ignore_index=True)
+    
    #reviews_df = pd.DataFrame(data['reviews'])
 
 app = Flask(__name__)
@@ -42,11 +44,11 @@ def cossim_search(query):
     matches_filtered_json = out.to_json(orient='records')
     return matches_filtered_json 
     
-def svd_search(query, price_range): 
-    results = svd.svd_results(restaurants_df, query)
-    #print(results)
+def svd_search(filtered_df, query): 
+
+    results = svd.svd_results(filtered_df, query)
     df = pd.DataFrame(results, columns=['name'])
-    matches = pd.merge(df,restaurants_df, on='name') 
+    matches = pd.merge(df,filtered_df, on='name') 
     matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
     out = matches_filtered.sort_index()
     matches_filtered_json = out.to_json(orient='records')
@@ -77,7 +79,18 @@ def json_search(query):
     matches_filtered_json = matches_filtered.to_json(orient='records')
     return matches_filtered_json
 
-    
+def filter_data(time, price, locality, df):
+    print(time + "filter")
+    if time == "morning":
+        new_df = df[df["morning"] == 1]
+    elif time == "evening":
+        new_df= df[df["evening"] == 1]
+    elif time == "nightlife":
+        new_df = df[df["nightlife"] == 1]
+        
+    filtered = new_df[(new_df[new_df["price_range"] == price]) & (new_df[new_df["locality"] == locality])]
+    return filtered
+        
 
 @app.route("/")
 def home():
@@ -86,10 +99,22 @@ def home():
 @app.route("/episodes")
 def episodes_search():
     text = request.args.get("title")
-    print(text)
+    time = request.args.get("time")
+    print(time + "in epi")
     price_range = request.args.get("price_range")
-    return svd_search(text, price_range)
+    price = ""
+    if price_range == "2":
+        price = "$"
+    elif price_range == "3":
+        price = "$$"
+    elif price_range == "4":
+        price = "$$$"
+    locality = request.args.get("locality")
+    print('here')
+    filtered_df = filter_data(time, price, locality, restaurants_df)
+    #return svd_search(text, time, price)
     
+    return svd_search(filtered_df,text)
     
 
 if 'DB_NAME' not in os.environ:
