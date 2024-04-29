@@ -229,7 +229,6 @@
                       <img src="../static/images/chef.jpg" width="50" height="50">
                       </a></p>
                     <p class='episode-desc'>${comments}</p>
-                    <p class = 'episode-desc'>${score}</p>
                     <div class="heart-container">
                       <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
                   </div>
@@ -265,7 +264,7 @@
             }
             else {
               let tempDiv1 = document.createElement("div");
-              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score);
+              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
               document.getElementById("answer-box-1").appendChild(tempDiv1);
             }
           })
@@ -296,7 +295,7 @@
           document.getElementById("answer-box-1").innerHTML = "";
           data.forEach(row => {
             let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score);
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
           });
         })

@@ -49,7 +49,7 @@ def cossim_search(query):
 def svd_search(query, filtered_df): 
     svd_df = filtered_df
     results = svd.svd_search(query, svd_df, k=5)
-    top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score'])
+    top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments'])
     '''matches = pd.merge(df,restaurants_df, on='name') 
     matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
     out = matches_filtered.sort_index()

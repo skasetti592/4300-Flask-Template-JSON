@@ -72,5 +72,5 @@ def svd_search(query, restaurants_df, k=5):
     locality = top_restaurant_names[i][4]
     trip_advisor_url = top_restaurant_names[i][5]
     comments = top_restaurant_names[i][6]
-    results.append((name,type,price_range,street_address,locality,trip_advisor_url, comments, top_scores[i]))
+    results.append((name,type,price_range,street_address,locality,trip_advisor_url, comments))
   return results
