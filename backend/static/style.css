@@ -33,26 +33,15 @@
     src: url('/static/fonts/nanumgothic-extrabold.ttf');
 }
 
-body {
-    background-color: #FFBF86;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    overflow-y: hidden;
-    max-width: 100%;
-
-}
 
 .full-body-container {
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
     height: 100%;
-    max-width: 100vw;
-    max-height: 100vh;
     display: flex;
     justify-content: start;
     align-items: center;
@@ -61,22 +50,21 @@ body {
 
 .header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    padding-bottom: 20px;
 }
 
 .header img {
-    margin-top: 20px;
     width: 75px;
     height: 75px;
+    margin-right: 10px;
 }
 
 .header h1 {
     font-family: 'Poppins Bold';
     font-size: 320%;
-    margin-top: 10px;
-    margin-bottom: 0px;
 }
 
 .price-button {
@@ -90,6 +78,68 @@ body {
 .price-button input {
     width: 75%;
 }
+
+.answer-box-item {
+    border: 1px solid black;
+    background-color: #ffd6b7;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 450px;
+}
+
+.button-container,
+.heart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.popup {
+    font-family: 'Poppins Bold';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 250px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 1px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup-content {
+    font-family: 'Poppins Bold';
+    text-align: center;
+}
+
+#closePopup {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+
+.show {
+    display: block;
+}
+
+.update-button,
+.it-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+    font-weight: 700;
+}
+
+
 
 h2 {
     font-family: 'Poppins Bold';
@@ -138,6 +188,19 @@ select {
     margin-top: 15px;
     font-size: 20px;
     font-family: 'Satoshi Bold';
+
+
+}
+
+.time-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 20px;
+    font-family: 'Satoshi Bold';
+
 }
 
 p {
@@ -182,7 +245,6 @@ form>* {
     flex-basis: 45%;
     padding-left: 100px;
     padding-right: 100px;
-    text-align: center;
     margin-bottom: auto;
     display: flex;
 }
@@ -205,82 +267,89 @@ form>* {
 }
 
 .inputBox {
-    display: flex;
+    display: block;
     width: 100%;
     margin: 0 auto;
+    /* This will center the input box if its width is less than 100% */
+}
+
+.button {
+    margin-top: 15px;
+}
+
+
+.button button {
+    border-radius: 50px;
+    font-size: 18px;
+    padding: 12px;
+    margin-left: 50px;
+
+    border-color: black;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.button button:hover {
+    background-color: #FF8C00;
 }
 
 .description {
-    margin-top: -25px;
+    margin-top: none;
     display: flex;
     flex-direction: column;
     width: 100%;
 
 }
 
-.load-new-page {
+.button-row {
     display: flex;
-    background: #FF8C00;
-    color: black;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Satoshi Bold';
-    text-align-last: center;
-    text-align: center;
-    -moz-text-align-last: center;
-    transition-duration: 0.4s;
-
-
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.load-new-page:hover {
-    background-color: #b26200;
-    color: white;
+.button-row .update-button,
+.button-row .it-button {
+    margin: 0 10px;
+    background-color: #e79247
 }
+
+.button-row .update-button button:hover,
+.button-row .it-button button:hover {
+    background-color: #ffd6b7;
+}
+
 
 
 #answer-box-1,
 #answer-box-2 {
-    border: solid 2px white;
-    width: 80%;
+    /* border: solid 2px white; */
+    /* Adjust border color as needed */
+    /* width: 80%; */
+    /* Adjust width as needed */
     margin: auto;
+    position: absolute;
     top: 150px;
     left: 50%;
+    flex-basis: 50%;
+    transform: translateX(-20%)
 }
 
-.input-container,
-#answer-box-1,
-#answer-box-2 {
-    flex-basis: 50%
+.back-button {
+    position: fixed;
+    top: 17%;
+    left: 50%;
+    background-color: #e79247;
+    transform: translate(-50%, -50%);
+
+    /* Make the button bigger */
+    padding: 10px 20px;
+    font-size: 16px;
+
+    /* Transition for smooth color change */
+    transition: background-color 0.3s ease;
 }
 
-.loading {
-    margin: 10px;
-    border: 8px solid #f3f3f3;
-    /* Light grey */
-    border-top: 8px solid #FF8C00;
-    /* Blue */
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Add this to your CSS */
-.loading.hidden {
-    display: none;
+/* Change color on hover */
+.back-button:hover {
+    background-color: #ffd6b7;
 }
