@@ -213,14 +213,12 @@
           }
         }
       }
-
-      // Toggle heart image
       heartImage.src = imageUrl.includes('empty-heart.png') ?
         '../static/images/heart.png' : '../static/images/empty-heart.png';
     }
 
 
-    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score) {
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
                     <p class='episode-desc'>${titleDesc}</p>
@@ -231,6 +229,7 @@
                       <img src="../static/images/chef.jpg" width="50" height="50">
                       </a></p>
                     <p class='episode-desc'>${comments}</p>
+                    <p class = 'episode-desc'>${score}</p>
                     <div class="heart-container">
                       <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
                   </div>
@@ -266,7 +265,7 @@
             }
             else {
               let tempDiv1 = document.createElement("div");
-              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score);
               document.getElementById("answer-box-1").appendChild(tempDiv1);
             }
           })
@@ -291,13 +290,13 @@
       console.log(restaurantNames)
       console.log("before url search")
 
-      fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, price_range: priceRange, restaurant_names: restaurantNames }).toString())
+      fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, price_range: priceRange, time: time, restaurant_names: restaurantNames }).toString())
         .then(response => response.json())
         .then(data => {
           document.getElementById("answer-box-1").innerHTML = "";
           data.forEach(row => {
             let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
           });
         })
@@ -392,23 +391,6 @@
         console.error(`Container with ID '${containerId}' not found.`);
       }
     }
-
-
-    /*function outputSelectedRestaurants(restaurants, containerId) {
-      if (restaurants.length === 0) {
-        // If no restaurants are selected for this time, display a message
-        let tempDiv = document.createElement("div");
-        tempDiv.innerHTML = "<p>No restaurants selected for this time.</p>";
-        document.getElementById(containerId).appendChild(tempDiv);
-      } else {
-        // Iterate over the restaurants and append them to the container
-        restaurants.forEach(row => {
-          let tempDiv1 = document.createElement("div");
-          tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-          document.getElementById("answer-box-1").appendChild(tempDiv1);
-        });
-      }
-    } */
 
   </script>
 </body>
