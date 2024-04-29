@@ -7,7 +7,6 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import normalize
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Preprocessing data
 def preprocess(text):
     text = text.lower()
     text = re.sub(r"[.,\/#!$%\^\*;:{}=\_`~()@]", " ", text)

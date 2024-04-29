@@ -187,13 +187,10 @@
       if (imageUrl.includes('heart.png')) {
         if (time === 'morning') {
           morningSelect.push(restaurantId);
-          console.log(time)
         } else if (time === 'evening') {
           eveningSelect.push(restaurantId);
-          console.log(time)
         } else if (time === 'nightlife') {
           nightlifeSelect.push(restaurantId);
-          console.log(time)
         }
       } else {
         if (time === 'morning') {
@@ -250,7 +247,6 @@
       const locationCity = document.getElementById('locality').value;
       const time = document.getElementById('time').value;
 
-      console.log(filterText)
 
 
       fetch("/episodes?" + new URLSearchParams({ query: filterText, price_range: priceRange, locality: locationCity, time: time }).toString())
@@ -286,8 +282,6 @@
         restaurantNames = JSON.stringify(nightlifeSelect);
       }
 
-      console.log(restaurantNames)
-      console.log("before url search")
 
       fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, price_range: priceRange, time: time, restaurant_names: restaurantNames }).toString())
         .then(response => response.json())

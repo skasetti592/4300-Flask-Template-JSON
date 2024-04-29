@@ -46,11 +46,6 @@ def rocchio_results(df, query, feedback):
       qtypes.add(t)
 
     relevant_docs = feedback # list of relevant document indices
-    print(relevant_docs)
-    print("This is relevant")
-    print("Length of tfidf_matrix:", len(tfidf_matrix))
-    print("Max index in relevant_docs:", max(relevant_docs))
-    print("Min index in relevant_docs:", min(relevant_docs))
 
     non_relevant_docs = []  # list of non-relevant document indices
 
