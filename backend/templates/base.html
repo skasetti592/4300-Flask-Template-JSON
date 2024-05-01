@@ -252,17 +252,15 @@
       fetch("/episodes?" + new URLSearchParams({ query: filterText, price_range: priceRange, locality: locationCity, time: time }).toString())
         .then((response) => response.json())
         .then((data) => {
+          if (data.length == 0) {
+            let tempDiv = document.createElement("div");
+            tempDiv.innerHTML = "<p>No results found. Please edit your query.</p>";
+            document.getElementById("answer-box-1").appendChild(tempDiv);
+          }
           data.forEach(row => {
-            if (data.length == 0) {
-              let tempDiv = document.createElement("div");
-              tempDiv.innerHTML = "<p>No results found.</p>";
-              document.getElementById("answer-box-1").appendChild(tempDiv);
-            }
-            else {
-              let tempDiv1 = document.createElement("div");
-              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
-              document.getElementById("answer-box-1").appendChild(tempDiv1);
-            }
+            let tempDiv1 = document.createElement("div");
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+            document.getElementById("answer-box-1").appendChild(tempDiv1);
           })
         });
     }

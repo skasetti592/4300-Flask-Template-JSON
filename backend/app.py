@@ -42,7 +42,7 @@ def cossim_search(query):
     
 def svd_search(query, filtered_df): 
     svd_df = filtered_df
-    results = svd.svd_search(query, svd_df, k=5)
+    results = svd.svd_search(query, svd_df, k=40)
     top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments'])
     '''matches = pd.merge(df,restaurants_df, on='name') 
     matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
@@ -50,6 +50,8 @@ def svd_search(query, filtered_df):
     matches_filtered_json = out.to_json(orient='records')
     print(matches_filtered_json)'''
     matches_filtered_json = top_restaurant_df.to_json(orient='records')
+    print(matches_filtered_json)
+    print("return svd")
 
     return matches_filtered_json
 
@@ -105,6 +107,8 @@ def let_filter(restaurant_names, price, location_city, time):
 @app.route("/episodes")
 def episodes_search():
     query = request.args.get("query")
+    print(query)
+    print("this is a query")
     price_range = request.args.get("price_range")
     price = ""
     if price_range == "2":
@@ -135,7 +139,7 @@ def episodes_search():
     else:
 
         results = svd_search(query, episodes_df)
-        return results
+        return []
     
     
 if 'DB_NAME' not in os.environ:

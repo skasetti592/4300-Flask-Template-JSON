@@ -15,22 +15,29 @@ def preprocess(text):
 
 def determine_n_component(df):
    n_samples, n_features = df.shape
+   print(n_features)
+   print("this is features")
+   print(n_samples)
 
    component_ratio = 0.5
 
    n_components = min(n_samples, n_features) * component_ratio
 
    n_components = int(round(n_components))
+   print(n_components)
+   print("before return")
 
    return n_components
 
-def svd_search(query, restaurants_df, k=5): 
+def svd_search(query, restaurants_df, k=40): 
   restaurants_df['combined_text'] = restaurants_df['name'] + ' ' + restaurants_df['comments']
 
   def tokenize(text):
       return text.split()
   
   n_components = determine_n_component(restaurants_df)
+  print(n_components)
+  print("after return")
 
   # Create TF-IDF matrix
   tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=0.8, min_df=5)
