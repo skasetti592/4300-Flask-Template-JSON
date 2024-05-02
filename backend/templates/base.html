@@ -2,17 +2,18 @@
 <title>{% block title %}{% endblock %} GrubCity</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-<body style="background-color:#FFBF86;">
+<body style="background: linear-gradient(180deg, #ffcca4, #ffcca4);">
   <div class="full-body-container">
     <div class="top-text">
       <div class="container">
         <div class="header">
-          <img src="../static/images/plane.jpg" width=80px height=80px />
-          <h1>Grub City</h1>
+          <!-- <img src="../static/images/plane.jpg" width=80px height=80px /> -->
+          <img src="../static/images/airplane.png" width=200px height=200px class='airplane' />
+          <h1>GRUB CITY</h1>
+          <p>Be a Foodie!</p>
         </div>
       </div>
     </div>
-
     <div class="first-row">
       <div class="price-button">
         <label for="price-range" class="price-text">Select Price Range:</label>
@@ -33,7 +34,6 @@
         </select>
         <div id="selected-locality"></div>
       </div>
-
       <div class="time-label">
         <label for="time" class="centered-label">Time:</label>
         <select name="time" id="time">
@@ -65,26 +65,64 @@
           <button type="button" onclick="search()"> Search </button>
         </div>
 
-        <div class="button-row">
+        <div class="button">
           <div class="update-button">
             <button class="centered-label" type=button onclick="updateButtonClick('button1')">Update
               Now</button>
           </div>
-
           <div class="it-button">
             <button class="centered-label" type=button onclick="itButtonClick('button2')">Generate
               Itinerary</button>
           </div>
-
-
         </div>
     </form>
 
   </div>
 
   <script>
+    function itButtonClick(buttonId) {
 
-    function showInfo(event, title, titleDesc, rating, loc) {
+      let backButton = document.createElement('button');
+      backButton.textContent = 'Back';
+      backButton.classList.add('centered-label', 'back-button');
+      backButton.style.position = 'relative';
+      backButton.style.top = '20px';
+      backButton.onclick = resetPage;
+      document.body.appendChild(backButton);
+
+      document.querySelector('.first-row').style.display = 'none';
+      document.querySelector('.main-container-wrapper').style.display = 'none';
+
+
+      let boxContainer = document.createElement('div');
+      boxContainer.style.display = 'flex';
+      boxContainer.style.justifyContent = 'space-between';
+      document.body.appendChild(boxContainer);
+
+      let morningBox = document.createElement('div');
+      morningBox.id = 'morning-box';
+      boxContainer.appendChild(morningBox);
+
+      let eveningBox = document.createElement('div');
+      eveningBox.id = 'evening-box';
+      boxContainer.appendChild(eveningBox);
+
+      let nightlifeBox = document.createElement('div');
+      nightlifeBox.id = 'nightlife-box';
+      boxContainer.appendChild(nightlifeBox);
+
+      morningBox.style.flex = '1';
+      eveningBox.style.flex = '1';
+      nightlifeBox.style.flex = '1';
+
+      outputrest(morningSelect, 'morning-box', 'morning');
+      outputrest(eveningSelect, 'evening-box', 'evening');
+      outputrest(nightlifeSelect, 'nightlife-box', 'nightlife');
+
+    }
+
+
+    function showInfo(event, title, titleDesc, rating, locality, comments) {
       event.preventDefault();
       closeAllPopups();
       var popup = document.createElement("div");
@@ -98,7 +136,7 @@
       popupTitle.textContent = title;
       popupTitle.style.color = "orange";
       var popupText = document.createElement("p");
-      popupText.innerHTML = `<strong>Title: </strong>${title}<br><strong>Description: </strong>${titleDesc}<br><strong>Rating: </strong>${rating}<br><strong>Location: </strong>${loc}`;
+      popupText.innerHTML = `<strong>Title: </strong>${title}<br><strong>Description: </strong>${titleDesc}<br><strong>Rating: </strong>${rating}<br><strong>Locality: </strong>${locality}<br><strong>Comments: </strong>${comments}`;
       popupContent.appendChild(popupTitle);
       popupContent.appendChild(popupText);
       popupContent.appendChild(closeButton);
@@ -106,7 +144,6 @@
       document.body.appendChild(popup);
       closeButton.addEventListener("click", closePopup);
     }
-
     function closeAllPopups() {
       var popups = document.querySelectorAll(".popup");
       popups.forEach(function (popup) {
@@ -128,6 +165,28 @@
     priceRangeInput.addEventListener('input', updateFilters);
     LocInput.addEventListener('input', updateFilters);
 
+    let selectedRestaurants = [];
+
+    function toggleHeartImage(heartImage) {
+      const restaurantId = heartImage.dataset.id;
+      const imageUrl = heartImage.src;
+
+      // Add or remove restaurant ID based on heart state
+      if (imageUrl.includes('heart.png')) {
+        selectedRestaurants.push(restaurantId);
+        // console.log(`Added ID: ${restaurantId}`); // Output the added ID
+      } else {
+        const index = selectedRestaurants.indexOf(restaurantId);
+        // console.log(`Removed ID: ${restaurantId2}`); // Output the removed ID
+        if (index !== -1) {
+          selectedRestaurants.splice(index, 1);
+        }
+      }
+
+      // Toggle heart image
+      heartImage.src = imageUrl.includes('empty-heart.png') ?
+        '../static/images/heart.png' : '../static/images/empty-heart.png';
+    }
 
     function updateFilters() {
       document.getElementById('selected-locality').textContent = LocInput.options[LocInput.selectedIndex].text;
@@ -169,7 +228,6 @@
       LocOutput.textContent = locCity;
 
     }
-
     function search() {
       sendFocus();
       filterText();
@@ -215,24 +273,22 @@
     }
 
 
-    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score) {
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
                     <p class='episode-desc'>${titleDesc}</p>
-                    <p class='episode-desc'>${rating}</p>
-                    <p class='episode-desc'>${street_address, locality}</p>
-
+                    <p class='episode-desc'>${street_address}</p>
                     <p><a href=${trip_advisor_url} target="_blank">
                       <img src="../static/images/chef.jpg" width="50" height="50">
                       </a></p>
-                    <p class='episode-desc'>${comments}</p>
-                    <div class="heart-container">
-                      <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
+                      <div class="heart-container">
+                      <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image-2" data-id = "${title}" onclick="toggleHeartImage(this)" />
                   </div>
+                  <div class="button-container">
+                    <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
+        </div>
                 </div>`;
-
     }
-
     function sendFocus() {
       document.getElementById("preferences_morn").focus();
     }
@@ -262,6 +318,9 @@
             tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
           })
+          tempDiv.querySelector('.info-button').addEventListener('click', function (event) {
+            showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
+          });
         });
     }
 
@@ -296,46 +355,6 @@
         });
     }
 
-
-    function itButtonClick(buttonId) {
-
-      let backButton = document.createElement('button');
-      backButton.textContent = 'Back';
-      backButton.classList.add('centered-label', 'back-button');
-      backButton.onclick = resetPage;
-      document.body.appendChild(backButton);
-
-      document.querySelector('.first-row').style.display = 'none';
-      document.querySelector('.main-container-wrapper').style.display = 'none';
-
-
-      let boxContainer = document.createElement('div');
-      boxContainer.style.display = 'flex';
-      boxContainer.style.justifyContent = 'space-between';
-      document.body.appendChild(boxContainer);
-
-      let morningBox = document.createElement('div');
-      morningBox.id = 'morning-box';
-      boxContainer.appendChild(morningBox);
-
-      let eveningBox = document.createElement('div');
-      eveningBox.id = 'evening-box';
-      boxContainer.appendChild(eveningBox);
-
-      let nightlifeBox = document.createElement('div');
-      nightlifeBox.id = 'nightlife-box';
-      boxContainer.appendChild(nightlifeBox);
-
-      morningBox.style.flex = '1';
-      eveningBox.style.flex = '1';
-      nightlifeBox.style.flex = '1';
-
-      outputrest(morningSelect, 'morning-box', 'morning');
-      outputrest(eveningSelect, 'evening-box', 'evening');
-      outputrest(nightlifeSelect, 'nightlife-box', 'nightlife');
-
-    }
-
     function resetPage() {
       location.reload();
     }
@@ -347,7 +366,7 @@
         container.innerHTML = "";
 
         const timeOfDayElement = document.createElement("p");
-        timeOfDayElement.textContent = `Time of day: ${timeOfDay}`;
+        timeOfDayElement.textContent = `Time of Day: ${timeOfDay}`;
         container.appendChild(timeOfDayElement);
 
         if (restaurants.length === 0) {
