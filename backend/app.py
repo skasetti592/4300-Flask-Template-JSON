@@ -8,8 +8,6 @@ import foodies_cossim as fc
 import foodies_svd as svd 
 from urllib.parse import unquote
 
-
-
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
 
@@ -42,7 +40,7 @@ def cossim_search(query):
     
 def svd_search(query, filtered_df): 
     svd_df = filtered_df
-    results = svd.svd_search(query, svd_df, k=40)
+    results = svd.svd_search(query, svd_df, k=5)
     top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments'])
     '''matches = pd.merge(df,restaurants_df, on='name') 
     matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
@@ -107,8 +105,6 @@ def let_filter(restaurant_names, price, location_city, time):
 @app.route("/episodes")
 def episodes_search():
     query = request.args.get("query")
-    print(query)
-    print("this is a query")
     price_range = request.args.get("price_range")
     price = ""
     if price_range == "2":
@@ -128,18 +124,18 @@ def episodes_search():
 
 
     if restaurant_names is not None:
-        results_morn_list = json.loads(restaurant_names)
+        results_list = json.loads(restaurant_names)
 
 
-        morning_restaurant_ids = name_to_id(results_morn_list)
-        results_morn = rocchio_search(episodes_df, query, morning_restaurant_ids)
+        result_restaurant_ids = name_to_id(results_list)
+        results_rocchio = rocchio_search(episodes_df, query, result_restaurant_ids)
 
-        return results_morn
+        return results_rocchio
 
     else:
 
-        results = svd_search(query, episodes_df)
-        return []
+        results_svd = svd_search(query, episodes_df)
+        return results_svd
     
     
 if 'DB_NAME' not in os.environ:

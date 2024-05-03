@@ -214,6 +214,10 @@ label {
     text-align: center;
 }
 
+.price-range {
+    cursor: pointer;
+}
+
 select {
     padding: 8px 15px;
     border: none;
@@ -235,6 +239,10 @@ select {
     font-family: 'Satoshi Bold';
 }
 
+.locality {
+    cursor: pointer;
+}
+
 .time-label {
     display: flex;
     flex-direction: column;
@@ -243,6 +251,10 @@ select {
     margin-top: 15px;
     font-size: 20px;
     font-family: 'Satoshi Bold';
+}
+
+.time {
+    cursor: pointer;
 }
 
 p {
@@ -324,7 +336,6 @@ form>* {
     margin-top: 15px;
 }
 
-.info-button,
 .button button {
     font-family: 'Satoshi Bold';
     border-radius: 50px;
@@ -337,6 +348,21 @@ form>* {
     cursor: pointer;
     justify-content: center;
     align-items: center;
+}
+
+.info-button {
+    font-family: 'Satoshi Bold';
+    margin-left: None;
+    border-radius: 50px;
+    font-size: 16px;
+    padding: 12px;
+    border-color: black;
+    background-color: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.info-button button:hover {
+    background-color: #b3680d;
 }
 
 .button button:hover {
@@ -394,21 +420,29 @@ form>* {
 }
 
 .back-button {
-    position: fixed;
+    position: relative;
     top: 17%;
     left: 50%;
     background-color: #e79247;
     transform: translate(-50%, -50%);
 
-    /* Make the button bigger */
     padding: 10px 20px;
     font-size: 16px;
 
-    /* Transition for smooth color change */
     transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
 /* Change color on hover */
 .back-button:hover {
     background-color: #ffd6b7;
+}
+
+#heart-image:hover {
+    cursor: pointer;
+}
+
+#locality:hover,
+#time:hover {
+    cursor: pointer;
 }

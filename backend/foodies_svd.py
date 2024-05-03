@@ -29,7 +29,7 @@ def determine_n_component(df):
 
    return n_components
 
-def svd_search(query, restaurants_df, k=40): 
+def svd_search(query, restaurants_df, k=5): 
   restaurants_df['combined_text'] = restaurants_df['name'] + ' ' + restaurants_df['comments']
 
   def tokenize(text):

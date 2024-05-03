@@ -280,13 +280,14 @@
                     <p class='episode-desc'>${street_address}</p>
                     <p><a href=${trip_advisor_url} target="_blank">
                       <img src="../static/images/chef.jpg" width="50" height="50">
-                      </a></p>
-                      <div class="heart-container">
-                      <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image-2" data-id = "${title}" onclick="toggleHeartImage(this)" />
-                  </div>
-                  <div class="button-container">
-                    <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
-        </div>
+                      </a>
+                    </p>
+                    <div class="heart-container">
+                      <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
+                    </div>
+                    <div class="button-container">
+                      <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
+                    </div>
                 </div>`;
     }
     function sendFocus() {
@@ -317,10 +318,15 @@
             let tempDiv1 = document.createElement("div");
             tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
-          })
-          tempDiv.querySelector('.info-button').addEventListener('click', function (event) {
-            showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
+
+            tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
+              showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
+
+
+            });
+
           });
+
         });
     }
 
