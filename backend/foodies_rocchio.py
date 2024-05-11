@@ -13,7 +13,6 @@ from numpy import linalg as LA
 from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 
-
 # loading dataset
 #df = pd.read_csv("dataset.csv")
 

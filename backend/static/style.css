@@ -54,12 +54,12 @@
     }
 
     50% {
-        transform: translate(205%, -65%) rotate(360deg);
+        transform: translate(215%, -65%) rotate(360deg);
         ;
     }
 
     100% {
-        transform: translate(205%, -65%) rotate(360deg);
+        transform: translate(215%, -65%) rotate(360deg);
         ;
     }
 }
@@ -179,7 +179,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 15px;
-    font-size: 16px;
+    font-size: 15px;
     font-family: 'Satoshi Bold';
     font-weight: 700;
 }
@@ -235,7 +235,7 @@ select {
     justify-content: center;
     align-items: center;
     margin-top: 15px;
-    font-size: 18px;
+    font-size: 15px;
     font-family: 'Satoshi Bold';
 }
 
@@ -249,7 +249,7 @@ select {
     justify-content: center;
     align-items: center;
     margin-top: 15px;
-    font-size: 20px;
+    font-size: 15px;
     font-family: 'Satoshi Bold';
 }
 
@@ -260,6 +260,7 @@ select {
 p {
     font-family: 'Poppins', sans-serif;
     text-align: center;
+    font-size: 15px;
     margin-bottom: 0px;
 }
 
@@ -285,14 +286,14 @@ form>* {
 }
 
 .price-text {
-    font-size: 16px;
+    font-size: 15px;
 }
 
 .inputBox {
     padding: 6px;
     margin-top: auto;
     margin-right: auto;
-    font-size: 16px;
+    font-size: 15px;
     text-align: center;
 }
 
@@ -316,6 +317,7 @@ form>* {
 
 .main-container-wrapper {
     display: flex;
+    margin-top: -20px;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -333,7 +335,7 @@ form>* {
     justify-content: center;
     flex-direction: row;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 16px;
 }
 
 .button button {

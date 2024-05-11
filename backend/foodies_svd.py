@@ -6,6 +6,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import normalize
 from sklearn.metrics.pairwise import cosine_similarity
+import warnings
+
+def custom_warning(message, category, filename, lineno, file=None, line=None):
+    if category == UserWarning and "token_pattern' will not be used since 'tokenizer'" in str(message):
+        print("Here are some recs")
+
+warnings.showwarning = custom_warning
 
 def preprocess(text):
     text = text.lower()
@@ -13,21 +20,19 @@ def preprocess(text):
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-def determine_n_component(df):
-   n_samples, n_features = df.shape
-   print(n_features)
-   print("this is features")
-   print(n_samples)
 
-   component_ratio = 0.5
-
-   n_components = min(n_samples, n_features) * component_ratio
-
-   n_components = int(round(n_components))
-   print(n_components)
-   print("before return")
-
-   return n_components
+def determine_n_component(df, variance_ratio=0.5):
+  #  print(n_features)
+  #  print("this is features")
+  #  print(n_samples)
+    n_samples, n_features = df.shape
+    min_dimension = min(n_samples, n_features)
+    n_components = min_dimension * variance_ratio 
+    n_components = min(n_components, min_dimension)
+    n_components = int(round(n_components))
+    return n_components
+  #  print(n_components)
+  #  print("before return")
 
 def svd_search(query, restaurants_df, k=5): 
   restaurants_df['combined_text'] = restaurants_df['name'] + ' ' + restaurants_df['comments']
@@ -35,16 +40,21 @@ def svd_search(query, restaurants_df, k=5):
   def tokenize(text):
       return text.split()
   
-  n_components = determine_n_component(restaurants_df)
-  print(n_components)
-  print("after return")
+  # n_components = determine_n_component(restaurants_df)
+  # print(n_components)
+  # print("after return")
 
   # Create TF-IDF matrix
-  tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=0.8, min_df=5)
+  tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=0.7, min_df=2)
   tfidf_matrix = tfidf_vectorizer.fit_transform(restaurants_df['combined_text'])
+  # print("TF-IDF matrix shape:", tfidf_matrix.shape)
+
+  n_components = determine_n_component(tfidf_matrix)
+  # print("Number of components:", n_components)
 
   svd = TruncatedSVD(n_components, random_state=43)
   svd_matrix = svd.fit_transform(tfidf_matrix)
+  # print("SVD matrix shape:", svd_matrix.shape)
 
   svd_matrix_normalized = normalize(svd_matrix, axis=1)
 

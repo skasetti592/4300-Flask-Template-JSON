@@ -48,8 +48,8 @@ def svd_search(query, filtered_df):
     matches_filtered_json = out.to_json(orient='records')
     print(matches_filtered_json)'''
     matches_filtered_json = top_restaurant_df.to_json(orient='records')
-    print(matches_filtered_json)
-    print("return svd")
+    # print(matches_filtered_json)
+    # print("return svd")
 
     return matches_filtered_json
 
@@ -133,7 +133,6 @@ def episodes_search():
         return results_rocchio
 
     else:
-
         results_svd = svd_search(query, episodes_df)
         return results_svd
     

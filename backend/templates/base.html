@@ -8,9 +8,18 @@
       <div class="container">
         <div class="header">
           <!-- <img src="../static/images/plane.jpg" width=80px height=80px /> -->
-          <img src="../static/images/airplane.png" width=200px height=200px class='airplane' />
+          <img src="../static/images/airplane.png" width=230px height=230px class='airplane' />
           <h1>GRUB CITY</h1>
-          <p>Be a Foodie!</p>
+          <p>To use this app, please input in your desired price, location, and meal time. This app
+            will
+            help you find
+            the ideal restaurant to visit according to your specifictation!<br> For more context, you will be given a
+            similarity score and a description that explains why that result was matched. <br>Then, you can use the
+            heart button to
+            "like"
+            the places you want to visit and view them using the "View Liked" button. <br>To find similar restaurants to
+            the
+            ones you liked, you can press the "Update Now" button.</p>
         </div>
       </div>
     </div>
@@ -22,7 +31,6 @@
           <output id="price-output">N/A</output>
         </div>
       </div>
-
       <div class="location-label">
         <label for="locality" class="centered-label">Location:</label>
         <select name="locality" id="locality">
@@ -44,9 +52,7 @@
         </select>
         <div id="selected-time"></div>
       </div>
-
     </div>
-
 
     <form id="inputValues">
       <div class="main-container-wrapper">
@@ -71,8 +77,7 @@
               Now</button>
           </div>
           <div class="it-button">
-            <button class="centered-label" type=button onclick="itButtonClick('button2')">Generate
-              Itinerary</button>
+            <button class="centered-label" type=button onclick="itButtonClick('button2')">View Liked</button>
           </div>
         </div>
     </form>
