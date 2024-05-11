@@ -7,6 +7,7 @@ import foodies_rocchio as rocchio
 import foodies_cossim as fc
 import foodies_svd as svd 
 from urllib.parse import unquote
+import warnings
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
@@ -25,6 +26,8 @@ with open(json_file_path, 'r', errors='ignore') as file:
     evening_df = restaurants_df[restaurants_df["evening"] == 1]
     nightlife_df = restaurants_df[restaurants_df["nightlife"] == 1]
 
+
+recs_message = "Here are some recs..."
 
 app = Flask(__name__)
 CORS(app)
@@ -55,7 +58,8 @@ def svd_search(query, filtered_df):
 
 @app.route("/")
 def home():
-    return render_template('base.html',title="sample html")
+    global recs_message
+    return render_template('base.html', title="sample html", recs_message=recs_message)
 
 def rocchio_search(filtered_df, query, restaurant_ids):
     rocchio_df = filtered_df
@@ -71,9 +75,7 @@ def rocchio_search(filtered_df, query, restaurant_ids):
 def name_to_id(restaurant_names):
     df = filtered_df
     name_to_id_map = df.set_index('name')['id'].to_dict()
-
     restaurant_ids = [name_to_id_map[name] for name in restaurant_names]
-
     return restaurant_ids
 
 
@@ -82,14 +84,11 @@ def filter_df(price_range, location_city, time):
         new_df = morning_df
     elif time == "evening":
         new_df = evening_df
-        
     elif time == "nightlife":
         new_df = nightlife_df
-       
     final_df = new_df[(new_df["state_abbreviation"] == location_city) & (new_df["price_range"] == price_range)] 
     final_df = final_df.reset_index(drop=True)
     final_df['id'] = final_df.index + 1
-
     return final_df
     
 filtered_df = None
@@ -100,7 +99,6 @@ def let_filter(restaurant_names, price, location_city, time):
         filtered_df = filter_df(price, location_city, time)
     global_df = filtered_df
     return global_df
-
 
 @app.route("/episodes")
 def episodes_search():
@@ -116,22 +114,13 @@ def episodes_search():
 
     location_city = request.args.get("locality")
     time = request.args.get("time")
-
     restaurant_names = request.args.get("restaurant_names")
-
-    
     episodes_df = let_filter(restaurant_names, price, location_city, time)
-
-
     if restaurant_names is not None:
         results_list = json.loads(restaurant_names)
-
-
         result_restaurant_ids = name_to_id(results_list)
         results_rocchio = rocchio_search(episodes_df, query, result_restaurant_ids)
-
         return results_rocchio
-
     else:
         results_svd = svd_search(query, episodes_df)
         return results_svd
