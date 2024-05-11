@@ -129,7 +129,7 @@
     }
 
 
-    function showInfo(event, title, titleDesc, rating, locality, comments) {
+    function showInfo(event, title, titleDesc, rating, locality, comments, svd_score) {
       event.preventDefault();
       closeAllPopups();
       var popup = document.createElement("div");
@@ -143,7 +143,7 @@
       popupTitle.textContent = title;
       popupTitle.style.color = "orange";
       var popupText = document.createElement("p");
-      popupText.innerHTML = `<strong>Title: </strong>${title}<br><strong>Description: </strong>${titleDesc}<br><strong>Rating: </strong>${rating}<br><strong>Locality: </strong>${locality}<br><strong>Comments: </strong>${comments}`;
+      popupText.innerHTML = `<strong>Title: </strong>${title}<br><strong>SVD Score: </strong>${svd_score}<br><strong>Description: </strong>${titleDesc}<br><strong>Rating: </strong>${rating}<br><strong>Locality: </strong>${locality}<br><strong>Comments: </strong>${comments}`;
       popupContent.appendChild(popupTitle);
       popupContent.appendChild(popupText);
       popupContent.appendChild(closeButton);
@@ -280,9 +280,10 @@
     }
 
 
-    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments) {
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, svd_score) {
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
+                    <p class='episode-desc'>SVD Score: ${svd_score}</p>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${street_address}</p>
                     <p><a href=${trip_advisor_url} target="_blank">
@@ -323,7 +324,7 @@
           }
           data.forEach(row => {
             let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.svd_score);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
 
             tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
@@ -359,7 +360,7 @@
           document.getElementById("answer-box-1").innerHTML = "";
           data.forEach(row => {
             let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.svd_score);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
           });
         })

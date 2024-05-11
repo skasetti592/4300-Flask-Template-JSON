@@ -44,16 +44,15 @@ def cossim_search(query):
 def svd_search(query, filtered_df): 
     svd_df = filtered_df
     results = svd.svd_search(query, svd_df, k=5)
-    top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments'])
-    '''matches = pd.merge(df,restaurants_df, on='name') 
-    matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
-    out = matches_filtered.sort_index()
-    matches_filtered_json = out.to_json(orient='records')
-    print(matches_filtered_json)'''
+    top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'svd_score'])
+    # matches = pd.merge(df,restaurants_df, on='name') 
+    # matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
+    # out = matches_filtered.sort_index()
+    # matches_filtered_json = out.to_json(orient='records')
+    # print(matches_filtered_json)
     matches_filtered_json = top_restaurant_df.to_json(orient='records')
     # print(matches_filtered_json)
     # print("return svd")
-
     return matches_filtered_json
 
 @app.route("/")
@@ -67,7 +66,7 @@ def rocchio_search(filtered_df, query, restaurant_ids):
     df = pd.DataFrame(results, columns=['name'])
     df = df.head(5)
     matches = pd.merge(df, rocchio_df, on='name') 
-    matches_filtered = matches[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments']]
+    matches_filtered = matches[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score']]
     out = matches_filtered.sort_index()
     matches_filtered_json = out.to_json(orient='records')
     return matches_filtered_json
