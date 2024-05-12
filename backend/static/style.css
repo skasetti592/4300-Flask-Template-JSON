@@ -317,7 +317,7 @@ form>* {
 
 .main-container-wrapper {
     display: flex;
-    margin-top: -20px;
+    margin-top: 0px;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -406,7 +406,6 @@ form>* {
 }
 
 
-
 #answer-box-1,
 #answer-box-2 {
     /* border: solid 2px white; */
@@ -435,7 +434,6 @@ form>* {
     cursor: pointer;
 }
 
-/* Change color on hover */
 .back-button:hover {
     background-color: #ffd6b7;
 }

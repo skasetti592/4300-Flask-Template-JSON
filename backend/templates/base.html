@@ -10,16 +10,16 @@
           <!-- <img src="../static/images/plane.jpg" width=80px height=80px /> -->
           <img src="../static/images/airplane.png" width=230px height=230px class='airplane' />
           <h1>GRUB CITY</h1>
-          <p>To use this app, please input in your desired price, location, and meal time. This app
+          <p>Input in your desired price, location, and meal time. This app
             will
             help you find
-            the ideal restaurant to visit according to your specifictation!<br> For more context, you will be given a
+            the ideal restaurant to visit according to your specification!<br> For more context, you will be given a
             similarity score and a description that explains why that result was matched. <br>Then, you can use the
             heart button to
-            "like"
-            the places you want to visit and view them using the "View Liked" button. <br>To find similar restaurants to
-            the
-            ones you liked, you can press the "Update Now" button.</p>
+            "like" and press the "Update Now" button to view similar restaurants. <br>
+            Once you have finished finalizing your restaraunts for the day you can view them using the
+            "View Liked" button.
+          </p>
           <!-- {% if recs_message %}
           <p>{{ recs_message }}</p>
           {% endif %} -->
@@ -76,7 +76,7 @@
 
         <div class="button">
           <div class="update-button">
-            <button class="centered-label" type=button onclick="updateButtonClick('button1')">Update
+            <button class="centered-label update-now-button" type=button onclick="updateButtonClick('button1')">Update
               Now</button>
           </div>
           <div class="it-button">
@@ -88,6 +88,12 @@
 
   <script>
     function itButtonClick(buttonId) {
+
+      const headerParagraph = document.querySelector('.header p');
+      if (headerParagraph) {
+        headerParagraph.textContent = "Click the back button to start a new search.";
+      }
+
 
       let backButton = document.createElement('button');
       backButton.textContent = 'Back';
