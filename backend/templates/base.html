@@ -13,8 +13,7 @@
           <p>Input in your desired price, location, and meal time. This app
             will
             help you find
-            the ideal restaurant to visit according to your specification!<br> For more context, you will be given a
-            similarity score and a description that explains why that result was matched. <br>Then, you can use the
+            the ideal restaurant to visit according to your specification!<br> Then, you can use the
             heart button to
             "like" and press the "Update Now" button to view similar restaurants. <br>
             Once you have finished finalizing your restaraunts for the day you can view them using the
@@ -289,7 +288,7 @@
     function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, svd_score) {
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
-                    <p class='episode-desc'>SVD Score: ${svd_score}</p>
+                    <p class='episode-desc'>Similarity Score: ${svd_score}</p>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${street_address}</p>
                     <p><a href=${trip_advisor_url} target="_blank">
