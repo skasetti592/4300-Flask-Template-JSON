@@ -87,6 +87,7 @@
   </div>
 
   <script>
+
     function itButtonClick(buttonId) {
 
       const headerParagraph = document.querySelector('.header p');
@@ -105,7 +106,6 @@
 
       document.querySelector('.first-row').style.display = 'none';
       document.querySelector('.main-container-wrapper').style.display = 'none';
-
 
       let boxContainer = document.createElement('div');
       boxContainer.style.display = 'flex';
@@ -134,8 +134,7 @@
 
     }
 
-
-    function showInfo(event, title, titleDesc, rating, locality, comments, svd_score) {
+    function showInfo(event, title, titleDesc, rating, locality, comments) {
       event.preventDefault();
       closeAllPopups();
       var popup = document.createElement("div");
@@ -149,7 +148,7 @@
       popupTitle.textContent = title;
       popupTitle.style.color = "orange";
       var popupText = document.createElement("p");
-      popupText.innerHTML = `<strong>Title: </strong>${title}<br><strong>SVD Score: </strong>${svd_score}<br><strong>Description: </strong>${titleDesc}<br><strong>Rating: </strong>${rating}<br><strong>Locality: </strong>${locality}<br><strong>Comments: </strong>${comments}`;
+      popupText.innerHTML = `<strong>Title: </strong>${title}<br><strong>Description: </strong>${titleDesc}<br><strong>Rating: </strong>${rating}<br><strong>Locality: </strong>${locality}<br><strong>Comments: </strong>${comments}`;
       popupContent.appendChild(popupTitle);
       popupContent.appendChild(popupText);
       popupContent.appendChild(closeButton);
@@ -157,6 +156,7 @@
       document.body.appendChild(popup);
       closeButton.addEventListener("click", closePopup);
     }
+
     function closeAllPopups() {
       var popups = document.querySelectorAll(".popup");
       popups.forEach(function (popup) {
@@ -348,6 +348,7 @@
       document.getElementById('answer-box-1').classList.toggle('update-button');
       const rocchio_query = document.getElementById('preferences_morn').value;
       const priceRange = document.getElementById('price-range').value;
+      const locationCity = document.getElementById('locality').value;
       const time = document.getElementById('time').value;
       let restaurantNames;
 
@@ -360,14 +361,22 @@
       }
 
 
-      fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, price_range: priceRange, time: time, restaurant_names: restaurantNames }).toString())
+      fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, locality: locationCity, price_range: priceRange, time: time, restaurant_names: restaurantNames }).toString())
         .then(response => response.json())
         .then(data => {
           document.getElementById("answer-box-1").innerHTML = "";
           data.forEach(row => {
             let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.svd_score);
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
+
+            tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
+              showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
+
+
+            });
+
+
           });
         })
         .catch((error) => {

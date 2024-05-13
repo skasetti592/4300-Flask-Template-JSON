@@ -39,7 +39,7 @@ def determine_n_component(df, variance_ratio=0.5):
   #  print(n_components)
   #  print("before return")
 
-def svd_search(query, restaurants_df, k=5): 
+def svd_search(query, restaurants_df, p_r, l_c, t_d, k): 
   restaurants_df['combined_text'] = restaurants_df['name'] + ' ' + restaurants_df['comments']
 
   def tokenize(text):
@@ -57,7 +57,7 @@ def svd_search(query, restaurants_df, k=5):
     tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=max_df_adjusted, min_df=min_df_adjusted)
     tfidf_matrix = tfidf_vectorizer.fit_transform(restaurants_df['combined_text'])
 
-  n_components = int(determine_n_component(tfidf_matrix))
+  n_components = 42
   # print("Number of components:", n_components)
 
   svd = TruncatedSVD(n_components, random_state=43)
@@ -79,13 +79,16 @@ def svd_search(query, restaurants_df, k=5):
   results = []
   for i in range(len(top_indices)):
     index = top_indices[i]
-    name = restaurants_df.iloc[index]['name']
-    type = restaurants_df.iloc[index]['type']
-    price_range = restaurants_df.iloc[index]['price_range']
-    street_address = restaurants_df.iloc[index]['street_address']
-    locality = restaurants_df.iloc[index]['locality']
-    trip_advisor_url = restaurants_df.iloc[index]['trip_advisor_url']
-    comments = restaurants_df.iloc[index]['comments']
-    svd_score = top_scores[i]
-    results.append((name, type, price_range, street_address, locality, trip_advisor_url, comments, svd_score))
-  return results
+    if restaurants_df.iloc[index][t_d] == 1:
+      if restaurants_df.iloc[index]['state_abbreviation'] == l_c:
+        if restaurants_df.iloc[index]['price_range'] == p_r:
+          name = restaurants_df.iloc[index]['name']
+          type = restaurants_df.iloc[index]['type']
+          price_range = restaurants_df.iloc[index]['price_range']
+          street_address = restaurants_df.iloc[index]['street_address']
+          locality = restaurants_df.iloc[index]['locality']
+          trip_advisor_url = restaurants_df.iloc[index]['trip_advisor_url']
+          comments = restaurants_df.iloc[index]['comments']
+          svd_score = top_scores[i]
+          results.append((name, type, price_range, street_address, locality, trip_advisor_url, comments, svd_score))
+  return results[:5]

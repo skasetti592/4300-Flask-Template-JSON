@@ -41,9 +41,9 @@ def cossim_search(query):
     matches_filtered_json = out.to_json(orient='records')
     return matches_filtered_json 
     
-def svd_search(query, filtered_df): 
-    svd_df = filtered_df
-    results = svd.svd_search(query, svd_df, k=5)
+def svd_search(query, price, location_city, time): 
+    svd_df = restaurants_df
+    results = svd.svd_search(query, svd_df, price, location_city, time, k=80)
     top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'svd_score'])
     # matches = pd.merge(df,restaurants_df, on='name') 
     # matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
@@ -60,44 +60,27 @@ def home():
     global recs_message
     return render_template('base.html', title="sample html", recs_message=recs_message)
 
-def rocchio_search(filtered_df, query, restaurant_ids):
-    rocchio_df = filtered_df
+def rocchio_search(query, restaurant_ids, location, price, time):
+    rocchio_df = restaurants_df
     results = rocchio.rocchio_results(rocchio_df, query, restaurant_ids)
+    print("results returned")
     df = pd.DataFrame(results, columns=['name'])
-    df = df.head(5)
-    matches = pd.merge(df, rocchio_df, on='name') 
-    matches_filtered = matches[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score']]
+    matches = pd.merge(df, rocchio_df, on='name')
+    print(matches[:5]) 
+    print(location)
+    print(price)
+    final_df = matches[(matches["state_abbreviation"] == location) & (matches["price_range"] == price) & (matches[time] == 1)] 
+    final_df = final_df.head(5)
+    matches_filtered = final_df[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments']]
     out = matches_filtered.sort_index()
     matches_filtered_json = out.to_json(orient='records')
     return matches_filtered_json
 
 def name_to_id(restaurant_names):
-    df = filtered_df
+    df = restaurants_df
     name_to_id_map = df.set_index('name')['id'].to_dict()
     restaurant_ids = [name_to_id_map[name] for name in restaurant_names]
     return restaurant_ids
-
-
-def filter_df(price_range, location_city, time):
-    if time == "morning":
-        new_df = morning_df
-    elif time == "evening":
-        new_df = evening_df
-    elif time == "nightlife":
-        new_df = nightlife_df
-    final_df = new_df[(new_df["state_abbreviation"] == location_city) & (new_df["price_range"] == price_range)] 
-    final_df = final_df.reset_index(drop=True)
-    final_df['id'] = final_df.index + 1
-    return final_df
-    
-filtered_df = None
-
-def let_filter(restaurant_names, price, location_city, time):
-    global filtered_df
-    if restaurant_names is None:
-        filtered_df = filter_df(price, location_city, time)
-    global_df = filtered_df
-    return global_df
 
 @app.route("/episodes")
 def episodes_search():
@@ -114,14 +97,17 @@ def episodes_search():
     location_city = request.args.get("locality")
     time = request.args.get("time")
     restaurant_names = request.args.get("restaurant_names")
-    episodes_df = let_filter(restaurant_names, price, location_city, time)
+
     if restaurant_names is not None:
         results_list = json.loads(restaurant_names)
         result_restaurant_ids = name_to_id(results_list)
-        results_rocchio = rocchio_search(episodes_df, query, result_restaurant_ids)
+        print(result_restaurant_ids)
+        print("restaurant ids")
+        print("l_c:", location_city)
+        results_rocchio = rocchio_search(query, result_restaurant_ids, location_city, price, time)
         return results_rocchio
     else:
-        results_svd = svd_search(query, episodes_df)
+        results_svd = svd_search(query, price, location_city, time)
         return results_svd
     
     
