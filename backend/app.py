@@ -98,9 +98,6 @@ def episodes_search():
     if restaurant_names is not None:
         results_list = json.loads(restaurant_names)
         result_restaurant_ids = name_to_id(results_list)
-        print(result_restaurant_ids)
-        print("restaurant ids")
-        print("l_c:", location_city)
         results_rocchio = rocchio_search(query, result_restaurant_ids, location_city, price, time)
         return results_rocchio
     else:
