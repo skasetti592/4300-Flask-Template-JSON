@@ -66,9 +66,6 @@ def rocchio_search(query, restaurant_ids, location, price, time):
     print("results returned")
     df = pd.DataFrame(results, columns=['name'])
     matches = pd.merge(df, rocchio_df, on='name')
-    print(matches[:5]) 
-    print(location)
-    print(price)
     final_df = matches[(matches["state_abbreviation"] == location) & (matches["price_range"] == price) & (matches[time] == 1)] 
     final_df = final_df.head(5)
     matches_filtered = final_df[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments']]
