@@ -287,7 +287,7 @@
     }
 
 
-    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score_svd, best_words, score) {
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score_svd) {
 
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
@@ -301,8 +301,7 @@
                     <div class="heart-container">
                       <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
                     </div>
-                    <p class='episode-desc' id = 'best'>${best_words}</p>
-                    <p class='episode-desc' id = 'score'>${score}</p>
+                    <div id="chart-${title}"></div>
                     <div class="button-container">
                     <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
                     </div >
@@ -333,12 +332,39 @@
             data.results_svd.forEach(row => {
 
               let tempDiv1 = document.createElement("div");
-              const df_output = JSON.parse(data.best_words);
-              const df_rest = JSON.parse(data.restaurant);
+              const df_output = data.results_dict;
               console.log(df_output)
-              console.log(df_rest)
-              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score_svd, data.best_words, data.resaurant);
+
+              let best_words = df_output[row.name] ? df_output[row.name].best_words : [];
+              let score = df_output[row.name] ? df_output[row.name].score : [];
+
+              let graph = [{
+                type: 'scatterpolar',
+                r: score,
+                theta: best_words,
+                fill: 'toself'
+              }];
+
+              let layout = {
+                polar: {
+                  radialaxis: {
+                    visible: true,
+                    range: [0, 0.5]
+                  }
+                },
+                showlegend: false
+              };
+
+              // Ensure the DOM element is available before creating the chart
+
+              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score_svd);
+              setTimeout(() => {
+                Plotly.newPlot(`chart-${row.name}`, graph, layout);
+              }, 0);
               document.getElementById("answer-box-1").appendChild(tempDiv1);
+
+              //Plotly.newPlot(`chart-${name}`, data, layout)
+
 
               tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
                 showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);

@@ -151,7 +151,7 @@ def episodes_search():
             result_dict = {name: {'best_words': group['best_words'].tolist(), 'score': group['score'].tolist()} for name, group in grouped}
 
             print(result_dict)            
-            return jsonify(results_svd= results_svd, final = df_output)  # Return JSON data
+            return jsonify(results_svd= results_svd, results_dict = result_dict)  # Return JSON data
       
         else:
             print("no if statement")
