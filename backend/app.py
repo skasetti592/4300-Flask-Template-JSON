@@ -7,6 +7,10 @@ import foodies_rocchio as rocchio
 import foodies_cossim as fc
 import foodies_svd as svd 
 from urllib.parse import unquote
+import plotly.express as px
+import plotly
+import pandas as pd
+import numpy as np
 import warnings
 
 # ROOT_PATH for linking with all your files.
@@ -43,33 +47,33 @@ def cossim_search(query):
     
 def svd_search(query, price, location_city, time): 
     svd_df = restaurants_df
-    results = svd.svd_search(query, svd_df, price, location_city, time, k=80)
-    top_restaurant_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'svd_score'])
-    # matches = pd.merge(df,restaurants_df, on='name') 
-    # matches_filtered = matches[['name','type', 'price_range', 'street_address', 'locality', "trip_advisor_url", "comments"]]
-    # out = matches_filtered.sort_index()
-    # matches_filtered_json = out.to_json(orient='records')
-    # print(matches_filtered_json)
+    results = svd.svd_search(query, svd_df, price, location_city, time, k=50)
+    first = results[0]
+    restaurant_names = [restaurant[0] for restaurant in first]
+    best_words = results[1]
+    num_restaurants = len(restaurant_names)
+    query_tfidf = results[2]
+    tfidf_matrix = results[3]
+    tfidf_vectorizer = results[4]  # Extract tfidf_vectorizer
+    top_restaurant_df = pd.DataFrame(first, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score'])
     matches_filtered_json = top_restaurant_df.to_json(orient='records')
-    # print(matches_filtered_json)
-    # print("return svd")
-    return matches_filtered_json
+    return matches_filtered_json, best_words, tfidf_matrix, tfidf_vectorizer  # Return JSON results and other variables
 
-@app.route("/")
-def home():
-    global recs_message
-    return render_template('base.html', title="sample html", recs_message=recs_message)
 
 def rocchio_search(query, restaurant_ids, location, price, time):
     rocchio_df = restaurants_df
     results = rocchio.rocchio_results(rocchio_df, query, restaurant_ids)
-    print("results returned")
+    #rocchio_top_df = pd.DataFrame(results, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score'])
+    #final_df = rocchio_top_df[(rocchio_top_df["state_abbreviation"] == location) & (rocchio_top_df["price_range"] == price) & (rocchio_top_df[time] == 1)] 
+
+    
     df = pd.DataFrame(results, columns=['name'])
     matches = pd.merge(df, rocchio_df, on='name')
     final_df = matches[(matches["state_abbreviation"] == location) & (matches["price_range"] == price) & (matches[time] == 1)] 
     final_df = final_df.head(5)
     matches_filtered = final_df[['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments']]
     out = matches_filtered.sort_index()
+    
     matches_filtered_json = out.to_json(orient='records')
     return matches_filtered_json
 
@@ -78,6 +82,88 @@ def name_to_id(restaurant_names):
     name_to_id_map = df.set_index('name')['id'].to_dict()
     restaurant_ids = [name_to_id_map[name] for name in restaurant_names]
     return restaurant_ids
+
+def visualize_restaurant_scores(restaurant_names, df, num_restaurants, best_words, tfidf_matrix, tfidf_vectorizer):
+    temp_df = pd.DataFrame()
+    polar_chart_json_list = []
+    for i in range(num_restaurants):
+        words = best_words[i]  # Retrieve words for the current restaurant
+        word_indices = [tfidf_vectorizer.vocabulary_.get(word, -1) for word in words]
+        scores = []  # Initialize scores list inside the loop
+        for j in range(len(word_indices)):
+            doc = word_indices[j]
+            feature_index = tfidf_matrix[doc,:].nonzero()[1]
+            tfidf_scores = zip(feature_index, [tfidf_matrix[doc, x] for x in feature_index])
+            feature_names = tfidf_vectorizer.get_feature_names_out()
+            score_sum = 0
+            for w, s in [(feature_names[i], s) for (i, s) in tfidf_scores]:
+                score_sum += s
+            scores.append(score_sum)
+        scores_normalized = scores / np.linalg.norm(scores)  # Normalize scores
+        df = pd.DataFrame({'best_words': words[:10], 'score': scores_normalized[:10]})
+        df['restaurant'] = restaurant_names[i]
+        #df['relevant_document'] = ["\n".join(doc) for doc in results[1][i]]
+        temp_df = pd.concat([temp_df, df])
+    # Reset scores list for the next restaurant
+
+    # Visualize each restaurant separately
+    unique_restaurants = temp_df['restaurant'].unique()
+    for restaurant_name in unique_restaurants:
+        restaurant_df = temp_df[temp_df['restaurant'] == restaurant_name]
+        fig = px.line_polar(
+            data_frame=restaurant_df,
+            r='score',
+            theta='best_words',
+            line_close=True,
+            template='plotly_dark',
+            height=500,
+            title=f"TF-IDF Scores for Restaurant: {restaurant_name}"
+        )
+        fig.update_layout(
+            font_family='DM Sans, sans-serif',
+            title_font_family='DM Sans, sans-serif',
+            font=dict(size=18),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            title=dict(
+                xanchor="center",
+                yanchor="top",
+                x=0.5,
+                y=0.92
+            ),
+            legend=dict(
+                orientation="h",
+                title="",
+                y=-0.2,
+                x=0.5,
+                yanchor="bottom",
+                xanchor="center",
+                bgcolor="rgba(0,0,0,0)",
+            ),
+        )
+        
+        fig.update_polars(
+            angularaxis_linecolor="rgba(220, 220, 220, 0.2)",
+            radialaxis_linecolor="rgba(220, 220, 220, 0.2)",
+            angularaxis_gridcolor="rgba(220, 220, 220, 0.2)",
+            radialaxis_showgrid=False,
+            radialaxis_ticks="",
+            radialaxis_color="rgba(220, 220, 220, 0.2)",
+            radialaxis_showticklabels=False,
+            radialaxis_tickcolor="rgba(0,0,0,0)",
+            bgcolor="rgba(0,0,0,0)",
+        )
+        
+        polar_chart_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+        polar_chart_json = polar_chart_json.replace("'", "&#39;")
+        polar_chart_json_list.append(polar_chart_json)
+
+    return polar_chart_json_list
+
+@app.route("/")
+def home():
+    global recs_message
+    return render_template('base.html', title="sample html", recs_message=recs_message)
 
 @app.route("/episodes")
 def episodes_search():
@@ -101,8 +187,17 @@ def episodes_search():
         results_rocchio = rocchio_search(query, result_restaurant_ids, location_city, price, time)
         return results_rocchio
     else:
-        results_svd = svd_search(query, price, location_city, time)
-        return results_svd
+        results_svd_json, best_words, tfidf_matrix, tfidf_vectorizer = svd_search(query, price, location_city, time)  # Get JSON results and variables
+        results_svd = json.loads(results_svd_json)
+        if results_svd:
+            print("if statement")
+            restaurant_names = [restaurant['name'] for restaurant in results_svd]  # Extract restaurant names
+            polar_chart_json = visualize_restaurant_scores(restaurant_names, restaurants_df, len(restaurant_names), best_words, tfidf_matrix, tfidf_vectorizer)    
+            return jsonify(results_svd = results_svd, polar_chart_json = polar_chart_json)  # Return JSON data
+      
+        else:
+            print("no if statement")
+            return results_svd
     
     
 if 'DB_NAME' not in os.environ:

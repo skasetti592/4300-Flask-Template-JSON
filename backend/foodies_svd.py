@@ -24,45 +24,28 @@ def preprocess(text):
     return text
 
 
-def determine_n_component(df, variance_ratio=0.5):
-  #  print(n_features)
-  #  print("this is features")
-  #  print(n_samples)
-    n_samples, n_features = df.shape
-    min_dimension = min(n_samples, n_features)
-    n_components = min_dimension * variance_ratio 
-    n_components = max(n_components, 1)  # Ensure n_components is at least 1
-    n_components = min(n_components, min_dimension)
-    n_components = int(round(n_components))
-    return n_components
+def tokenize(text):
+    return text.split()
 
-  #  print(n_components)
-  #  print("before return")
+n_components = 42
+
+# Create TF-IDF matrix
+tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=0.8, min_df=5)
+
 
 def svd_search(query, restaurants_df, p_r, l_c, t_d, k): 
   restaurants_df['combined_text'] = restaurants_df['name'] + ' ' + restaurants_df['comments']
+  restaurants_df['processed_text'] = restaurants_df['combined_text'].apply(preprocess)
+  
+  tfidf_matrix = tfidf_vectorizer.fit_transform(restaurants_df['processed_text'])
 
-  def tokenize(text):
-      return text.split()
-
-  try:
-    tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=0.7, min_df=2)
-    tfidf_matrix = tfidf_vectorizer.fit_transform(restaurants_df['combined_text'])
-  # print("TF-IDF matrix shape:", tfidf_matrix.shape)
-  except ValueError as e:
-    # print("Error:", e)
-    # print("Adjusting max_df and min_df parameters...")
-    max_df_adjusted = 1.0  # Set max_df to a value that works
-    min_df_adjusted = 1    # Set min_df to a value that works
-    tfidf_vectorizer = TfidfVectorizer(stop_words='english', tokenizer=tokenize, max_df=max_df_adjusted, min_df=min_df_adjusted)
-    tfidf_matrix = tfidf_vectorizer.fit_transform(restaurants_df['combined_text'])
-
-  n_components = 42
-  # print("Number of components:", n_components)
-
+  #print(tfidf_matrix)
+  document_index = 0  # Index of the document you want to access
+  nonzero_indices = tfidf_matrix[document_index].nonzero()[1]
+  vocabulary = tfidf_vectorizer.get_feature_names_out()
+  words_in_document = [vocabulary[idx] for idx in nonzero_indices]
   svd = TruncatedSVD(n_components, random_state=43)
   svd_matrix = svd.fit_transform(tfidf_matrix)
-  # print("SVD matrix shape:", svd_matrix.shape)
 
   svd_matrix_normalized = normalize(svd_matrix, axis=1)
 
@@ -73,9 +56,19 @@ def svd_search(query, restaurants_df, p_r, l_c, t_d, k):
   query_svd_vector_normalized = normalize(query_svd_vector)
 
   similarities = cosine_similarity(query_svd_vector_normalized, svd_matrix_normalized)
-  
+
   top_indices = similarities.argsort(axis=1)[:, -k:][0][::-1]
   top_scores = np.sort(similarities[0])[-k:][::-1]
+
+  temp = []
+  for i in top_indices:
+    document_index = i
+    nonzero_indices = tfidf_matrix[document_index].nonzero()[1]
+    vocabulary = tfidf_vectorizer.get_feature_names_out()
+    words_in_document = [vocabulary[idx] for idx in nonzero_indices[:10]]
+    temp.append(words_in_document)
+
+  
   results = []
   for i in range(len(top_indices)):
     index = top_indices[i]
@@ -89,6 +82,7 @@ def svd_search(query, restaurants_df, p_r, l_c, t_d, k):
           locality = restaurants_df.iloc[index]['locality']
           trip_advisor_url = restaurants_df.iloc[index]['trip_advisor_url']
           comments = restaurants_df.iloc[index]['comments']
-          svd_score = top_scores[i]
-          results.append((name, type, price_range, street_address, locality, trip_advisor_url, comments, svd_score))
-  return results[:5]
+          score = top_scores[i]
+          results.append((name, type, price_range, street_address, locality, trip_advisor_url, comments, score))
+
+  return ((results[:5], temp, (query_vector.toarray()[0]), tfidf_matrix, tfidf_vectorizer))

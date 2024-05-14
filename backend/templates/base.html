@@ -1,6 +1,8 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} GrubCity</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 
 <body style="background: linear-gradient(180deg, #ffcca4, #ffcca4);">
   <div class="full-body-container">
@@ -285,10 +287,10 @@
     }
 
 
-    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, svd_score) {
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score, polarChartId) {
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
-                    <p class='episode-desc'>Similarity Score: ${svd_score}</p>
+                    <p class='episode-desc'>Similarity Score: ${score}</p>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${street_address}</p>
                     <p><a href=${trip_advisor_url} target="_blank">
@@ -298,50 +300,70 @@
                     <div class="heart-container">
                       <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
                     </div>
+                    <div id="${polarChartId}"></div>
                     <div class="button-container">
-                      <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
-                    </div>
-                </div>`;
+                    <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
+                    </div >
+                </div > `;
     }
     function sendFocus() {
       document.getElementById("preferences_morn").focus();
     }
 
+
     function filterText() {
       document.getElementById("answer-box-1").innerHTML = "";
 
-
       const filterText = document.getElementById("preferences_morn").value;
-
       const priceRange = document.getElementById('price-range').value;
       const locationCity = document.getElementById('locality').value;
       const time = document.getElementById('time').value;
 
-
-
       fetch("/episodes?" + new URLSearchParams({ query: filterText, price_range: priceRange, locality: locationCity, time: time }).toString())
         .then((response) => response.json())
         .then((data) => {
-          if (data.length == 0) {
+          if (!data.results_svd) {
             let tempDiv = document.createElement("div");
             tempDiv.innerHTML = "<p>No results found. Please edit your query.</p>";
             document.getElementById("answer-box-1").appendChild(tempDiv);
-          }
-          data.forEach(row => {
-            let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.svd_score);
-            document.getElementById("answer-box-1").appendChild(tempDiv1);
+          } else {
+            data.results_svd.forEach((row, index) => {
+              let polarChartData = data.polar_chart_json[index];
+              let polarChartId = `polarChart-${index}`;
 
-            tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
-              showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
+              console.log(`polarChartData for ${polarChartId}:`, polarChartData);
 
 
+              let tempDiv1 = document.createElement("div");
+              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score, polarChartId);
+
+              // Append the container for Plotly plot to tempDiv1
+              let plotContainerPlaceholder = tempDiv1.querySelector(`#${polarChartId}`);
+              plotContainerPlaceholder.id = polarChartId;
+
+              // Create plot container
+              let plotContainer = document.createElement("div");
+              plotContainer.className = "polar-chart";
+              plotContainerPlaceholder.appendChild(plotContainer);
+
+              document.getElementById("answer-box-1").appendChild(tempDiv1);
+
+              // Render Plotly plot
+              Plotly.newPlot(polarChartId, polarChartData)
+                .then(() => console.log(`Plotly plot ${polarChartId} rendered successfully`))
+                .catch(error => console.error(`Error rendering Plotly plot ${polarChartId}:`, error));
+
+              tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
+                showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
+              });
             });
-
-          });
-
-        });
+          }
+        })
+        .catch(error => console.error("Error fetching data from server:", error));
     }
+
+
+
 
     function updateButtonClick() {
       document.getElementById('answer-box-1').classList.toggle('update-button');
@@ -366,7 +388,7 @@
           document.getElementById("answer-box-1").innerHTML = "";
           data.forEach(row => {
             let tempDiv1 = document.createElement("div");
-            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments);
+            tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score);
             document.getElementById("answer-box-1").appendChild(tempDiv1);
 
             tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
@@ -394,7 +416,7 @@
         container.innerHTML = "";
 
         const timeOfDayElement = document.createElement("p");
-        timeOfDayElement.textContent = `Time of Day: ${timeOfDay}`;
+        timeOfDayElement.textContent = `Time of Day: ${timeOfDay} `;
         container.appendChild(timeOfDayElement);
 
         if (restaurants.length === 0) {
