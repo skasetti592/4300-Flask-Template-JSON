@@ -57,7 +57,6 @@
         <div id="selected-time"></div>
       </div>
     </div>
-
     <form id="inputValues">
       <div class="main-container-wrapper">
         <div class="main-container">
@@ -83,6 +82,7 @@
           <div class="it-button">
             <button class="centered-label" type=button onclick="itButtonClick('button2')">View Liked</button>
           </div>
+
         </div>
     </form>
   </div>
@@ -287,10 +287,11 @@
     }
 
 
-    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score, polarChartId) {
+    function answerBoxTemplate(title, titleDesc, rating, street_address, locality, trip_advisor_url, comments, score_svd, best_words, score) {
+
       return `<div class='answer-box-item'>
                     <h3 class='episode-title'>${title}</h3>
-                    <p class='episode-desc'>Similarity Score: ${score}</p>
+                    <p class='episode-desc'>Similarity Score: ${score_svd}</p>
                     <p class='episode-desc'>${titleDesc}</p>
                     <p class='episode-desc'>${street_address}</p>
                     <p><a href=${trip_advisor_url} target="_blank">
@@ -300,7 +301,8 @@
                     <div class="heart-container">
                       <img src="../static/images/empty-heart.png" width=20px height=20px id="heart-image" data-id = "${title}" onclick="toggleHeartImage(this)" />
                     </div>
-                    <div id="${polarChartId}"></div>
+                    <p class='episode-desc' id = 'best'>${best_words}</p>
+                    <p class='episode-desc' id = 'score'>${score}</p>
                     <div class="button-container">
                     <button class="info-button" onclick="showInfo(event, '${title}', '${titleDesc}', '${rating}', '${locality}', '${comments}')">More Info</button>
                     </div >
@@ -327,40 +329,26 @@
             tempDiv.innerHTML = "<p>No results found. Please edit your query.</p>";
             document.getElementById("answer-box-1").appendChild(tempDiv);
           } else {
-            data.results_svd.forEach((row, index) => {
-              let polarChartData = data.polar_chart_json[index];
-              let polarChartId = `polarChart-${index}`;
 
-              console.log(`polarChartData for ${polarChartId}:`, polarChartData);
-
+            data.results_svd.forEach(row => {
 
               let tempDiv1 = document.createElement("div");
-              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score, polarChartId);
-
-              // Append the container for Plotly plot to tempDiv1
-              let plotContainerPlaceholder = tempDiv1.querySelector(`#${polarChartId}`);
-              plotContainerPlaceholder.id = polarChartId;
-
-              // Create plot container
-              let plotContainer = document.createElement("div");
-              plotContainer.className = "polar-chart";
-              plotContainerPlaceholder.appendChild(plotContainer);
-
+              const df_output = JSON.parse(data.best_words);
+              const df_rest = JSON.parse(data.restaurant);
+              console.log(df_output)
+              console.log(df_rest)
+              tempDiv1.innerHTML = answerBoxTemplate(row.name, row.type, row.price_range, row.street_address, row.locality, row.trip_advisor_url, row.comments, row.score_svd, data.best_words, data.resaurant);
               document.getElementById("answer-box-1").appendChild(tempDiv1);
-
-              // Render Plotly plot
-              Plotly.newPlot(polarChartId, polarChartData)
-                .then(() => console.log(`Plotly plot ${polarChartId} rendered successfully`))
-                .catch(error => console.error(`Error rendering Plotly plot ${polarChartId}:`, error));
 
               tempDiv1.querySelector('.info-button').addEventListener('click', function (event) {
                 showInfo(event, row.name, row.type, row.price_range, row.locality, row.comments);
               });
+              // Replace 'column_name' with the name of the column you want to access
             });
           }
-        })
-        .catch(error => console.error("Error fetching data from server:", error));
+        });
     }
+
 
 
 
@@ -380,6 +368,7 @@
       } else if (time === 'nightlife') {
         restaurantNames = JSON.stringify(nightlifeSelect);
       }
+
 
 
       fetch("/episodes?" + new URLSearchParams({ query: rocchio_query, locality: locationCity, price_range: priceRange, time: time, restaurant_names: restaurantNames }).toString())

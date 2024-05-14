@@ -7,11 +7,11 @@ import foodies_rocchio as rocchio
 import foodies_cossim as fc
 import foodies_svd as svd 
 from urllib.parse import unquote
-import plotly.express as px
-import plotly
 import pandas as pd
 import numpy as np
 import warnings
+
+
 
 # ROOT_PATH for linking with all your files.
 os.environ['ROOT_PATH'] = os.path.abspath(os.path.join("..", os.curdir))
@@ -55,7 +55,7 @@ def svd_search(query, price, location_city, time):
     query_tfidf = results[2]
     tfidf_matrix = results[3]
     tfidf_vectorizer = results[4]  # Extract tfidf_vectorizer
-    top_restaurant_df = pd.DataFrame(first, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score'])
+    top_restaurant_df = pd.DataFrame(first, columns=['name', 'type', 'price_range', 'street_address', 'locality', 'trip_advisor_url', 'comments', 'score_svd'])
     matches_filtered_json = top_restaurant_df.to_json(orient='records')
     return matches_filtered_json, best_words, tfidf_matrix, tfidf_vectorizer  # Return JSON results and other variables
 
@@ -85,7 +85,6 @@ def name_to_id(restaurant_names):
 
 def visualize_restaurant_scores(restaurant_names, df, num_restaurants, best_words, tfidf_matrix, tfidf_vectorizer):
     temp_df = pd.DataFrame()
-    polar_chart_json_list = []
     for i in range(num_restaurants):
         words = best_words[i]  # Retrieve words for the current restaurant
         word_indices = [tfidf_vectorizer.vocabulary_.get(word, -1) for word in words]
@@ -104,61 +103,11 @@ def visualize_restaurant_scores(restaurant_names, df, num_restaurants, best_word
         df['restaurant'] = restaurant_names[i]
         #df['relevant_document'] = ["\n".join(doc) for doc in results[1][i]]
         temp_df = pd.concat([temp_df, df])
-    # Reset scores list for the next restaurant
+    
+    print(temp_df)
+    return temp_df
 
-    # Visualize each restaurant separately
-    unique_restaurants = temp_df['restaurant'].unique()
-    for restaurant_name in unique_restaurants:
-        restaurant_df = temp_df[temp_df['restaurant'] == restaurant_name]
-        fig = px.line_polar(
-            data_frame=restaurant_df,
-            r='score',
-            theta='best_words',
-            line_close=True,
-            template='plotly_dark',
-            height=500,
-            title=f"TF-IDF Scores for Restaurant: {restaurant_name}"
-        )
-        fig.update_layout(
-            font_family='DM Sans, sans-serif',
-            title_font_family='DM Sans, sans-serif',
-            font=dict(size=18),
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            title=dict(
-                xanchor="center",
-                yanchor="top",
-                x=0.5,
-                y=0.92
-            ),
-            legend=dict(
-                orientation="h",
-                title="",
-                y=-0.2,
-                x=0.5,
-                yanchor="bottom",
-                xanchor="center",
-                bgcolor="rgba(0,0,0,0)",
-            ),
-        )
-        
-        fig.update_polars(
-            angularaxis_linecolor="rgba(220, 220, 220, 0.2)",
-            radialaxis_linecolor="rgba(220, 220, 220, 0.2)",
-            angularaxis_gridcolor="rgba(220, 220, 220, 0.2)",
-            radialaxis_showgrid=False,
-            radialaxis_ticks="",
-            radialaxis_color="rgba(220, 220, 220, 0.2)",
-            radialaxis_showticklabels=False,
-            radialaxis_tickcolor="rgba(0,0,0,0)",
-            bgcolor="rgba(0,0,0,0)",
-        )
-        
-        polar_chart_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-        polar_chart_json = polar_chart_json.replace("'", "&#39;")
-        polar_chart_json_list.append(polar_chart_json)
-
-    return polar_chart_json_list
+    
 
 @app.route("/")
 def home():
@@ -192,8 +141,17 @@ def episodes_search():
         if results_svd:
             print("if statement")
             restaurant_names = [restaurant['name'] for restaurant in results_svd]  # Extract restaurant names
-            polar_chart_json = visualize_restaurant_scores(restaurant_names, restaurants_df, len(restaurant_names), best_words, tfidf_matrix, tfidf_vectorizer)    
-            return jsonify(results_svd = results_svd, polar_chart_json = polar_chart_json)  # Return JSON data
+            df_output = visualize_restaurant_scores(restaurant_names, restaurants_df, len(restaurant_names), best_words, tfidf_matrix, tfidf_vectorizer) 
+            best_words = df_output['best_words']
+            restaurant = df_output['restaurant']
+            best_words = best_words.to_json(orient='records')
+            restaurant = restaurant.to_json(orient='records')
+            grouped = df_output.groupby('restaurant')
+
+            result_dict = {name: {'best_words': group['best_words'].tolist(), 'score': group['score'].tolist()} for name, group in grouped}
+
+            print(result_dict)            
+            return jsonify(results_svd= results_svd, final = df_output)  # Return JSON data
       
         else:
             print("no if statement")
